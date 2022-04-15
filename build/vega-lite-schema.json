@@ -12645,6 +12645,120 @@
         }
       ]
     },
+    "LassoSelectionConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "clear": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stream"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "description": "Clears the selection, emptying it of all values. This property can be a [Event Stream](https://vega.github.io/vega/docs/event-streams/) or `false` to disable clear.\n\n__Default value:__ `dblclick`.\n\n__See also:__ [`clear` examples ](https://vega.github.io/vega-lite/docs/selection.html#clear) in the documentation."
+        },
+        "encodings": {
+          "description": "An array of encoding channels. The corresponding data field values must match for a data tuple to fall within the selection.\n\n__See also:__ The [projection with `encodings` and `fields` section](https://vega.github.io/vega-lite/docs/selection.html#project) in the documentation.",
+          "items": {
+            "$ref": "#/definitions/SingleDefUnitChannel"
+          },
+          "type": "array"
+        },
+        "fields": {
+          "description": "An array of field names whose values must match for a data tuple to fall within the selection.\n\n__See also:__ The [projection with `encodings` and `fields` section](https://vega.github.io/vega-lite/docs/selection.html#project) in the documentation.",
+          "items": {
+            "$ref": "#/definitions/FieldName"
+          },
+          "type": "array"
+        },
+        "mark": {
+          "$ref": "#/definitions/BrushConfig",
+          "description": "A lasso selection also adds a path mark to depict the shape of the lasso. The `mark` property can be used to customize the appearance of the mark.\n\n__See also:__ [`mark` examples](https://vega.github.io/vega-lite/docs/selection.html#mark) in the documentation."
+        },
+        "on": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stream"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "A [Vega event stream](https://vega.github.io/vega/docs/event-streams/) (object or selector) that triggers the selection. For interval selections, the event stream must specify a [start and end](https://vega.github.io/vega/docs/event-streams/#between-filters).\n\n__See also:__ [`on` examples](https://vega.github.io/vega-lite/docs/selection.html#on) in the documentation."
+        },
+        "resolve": {
+          "$ref": "#/definitions/SelectionResolution",
+          "description": "With layered and multi-view displays, a strategy that determines how selections' data queries are resolved when applied in a filter transform, conditional encoding rule, or scale domain.\n\nOne of:\n- `\"global\"` -- only one brush exists for the entire SPLOM. When the user begins to drag, any previous brushes are cleared, and a new one is constructed.\n- `\"union\"` -- each cell contains its own brush, and points are highlighted if they lie within _any_ of these individual brushes.\n- `\"intersect\"` -- each cell contains its own brush, and points are highlighted only if they fall within _all_ of these individual brushes.\n\n__Default value:__ `global`.\n\n__See also:__ [`resolve` examples](https://vega.github.io/vega-lite/docs/selection.html#resolve) in the documentation."
+        },
+        "type": {
+          "const": "lasso",
+          "description": "Determines the default event processing and data query for the selection. Vega-Lite currently supports two selection types:\n\n- `\"point\"` -- to select multiple discrete data values; the first value is selected on `click` and additional values toggled on shift-click.\n- `\"interval\"` -- to select a continuous range of data values on `drag`.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    },
+    "LassoSelectionConfigWithoutType": {
+      "additionalProperties": false,
+      "properties": {
+        "clear": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stream"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "description": "Clears the selection, emptying it of all values. This property can be a [Event Stream](https://vega.github.io/vega/docs/event-streams/) or `false` to disable clear.\n\n__Default value:__ `dblclick`.\n\n__See also:__ [`clear` examples ](https://vega.github.io/vega-lite/docs/selection.html#clear) in the documentation."
+        },
+        "encodings": {
+          "description": "An array of encoding channels. The corresponding data field values must match for a data tuple to fall within the selection.\n\n__See also:__ The [projection with `encodings` and `fields` section](https://vega.github.io/vega-lite/docs/selection.html#project) in the documentation.",
+          "items": {
+            "$ref": "#/definitions/SingleDefUnitChannel"
+          },
+          "type": "array"
+        },
+        "fields": {
+          "description": "An array of field names whose values must match for a data tuple to fall within the selection.\n\n__See also:__ The [projection with `encodings` and `fields` section](https://vega.github.io/vega-lite/docs/selection.html#project) in the documentation.",
+          "items": {
+            "$ref": "#/definitions/FieldName"
+          },
+          "type": "array"
+        },
+        "mark": {
+          "$ref": "#/definitions/BrushConfig",
+          "description": "A lasso selection also adds a path mark to depict the shape of the lasso. The `mark` property can be used to customize the appearance of the mark.\n\n__See also:__ [`mark` examples](https://vega.github.io/vega-lite/docs/selection.html#mark) in the documentation."
+        },
+        "on": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stream"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "A [Vega event stream](https://vega.github.io/vega/docs/event-streams/) (object or selector) that triggers the selection. For interval selections, the event stream must specify a [start and end](https://vega.github.io/vega/docs/event-streams/#between-filters).\n\n__See also:__ [`on` examples](https://vega.github.io/vega-lite/docs/selection.html#on) in the documentation."
+        },
+        "resolve": {
+          "$ref": "#/definitions/SelectionResolution",
+          "description": "With layered and multi-view displays, a strategy that determines how selections' data queries are resolved when applied in a filter transform, conditional encoding rule, or scale domain.\n\nOne of:\n- `\"global\"` -- only one brush exists for the entire SPLOM. When the user begins to drag, any previous brushes are cleared, and a new one is constructed.\n- `\"union\"` -- each cell contains its own brush, and points are highlighted if they lie within _any_ of these individual brushes.\n- `\"intersect\"` -- each cell contains its own brush, and points are highlighted only if they fall within _all_ of these individual brushes.\n\n__Default value:__ `global`.\n\n__See also:__ [`resolve` examples](https://vega.github.io/vega-lite/docs/selection.html#resolve) in the documentation."
+        }
+      },
+      "type": "object"
+    },
     "LatLongDef": {
       "anyOf": [
         {
@@ -23105,6 +23219,10 @@
           "$ref": "#/definitions/IntervalSelectionConfigWithoutType",
           "description": "The default definition for an [`interval`](https://vega.github.io/vega-lite/docs/parameter.html#select) selection. All properties and transformations for an interval selection definition (except `type`) may be specified here.\n\nFor instance, setting `interval` to `{\"translate\": false}` disables the ability to move interval selections by default."
         },
+        "lasso": {
+          "$ref": "#/definitions/LassoSelectionConfigWithoutType",
+          "description": "The default definition for an [`lasso`](https://vega.github.io/vega-lite/docs/parameter.html#select) selection. All properties and transformations for an lasso selection definition (except `type`) may be specified here."
+        },
         "point": {
           "$ref": "#/definitions/PointSelectionConfigWithoutType",
           "description": "The default definition for a [`point`](https://vega.github.io/vega-lite/docs/parameter.html#select) selection. All properties and transformations  for a point selection definition (except `type`) may be specified here.\n\nFor instance, setting `point` to `{\"on\": \"dblclick\"}` populates point selections on double-click by default."
@@ -23182,6 +23300,9 @@
             },
             {
               "$ref": "#/definitions/IntervalSelectionConfig"
+            },
+            {
+              "$ref": "#/definitions/LassoSelectionConfig"
             }
           ],
           "description": "Determines the default event processing and data query for the selection. Vega-Lite currently supports two selection types:\n\n- `\"point\"` -- to select multiple discrete data values; the first value is selected on `click` and additional values toggled on shift-click.\n- `\"interval\"` -- to select a continuous range of data values on `drag`."
@@ -23221,7 +23342,8 @@
     "SelectionType": {
       "enum": [
         "point",
-        "interval"
+        "interval",
+        "lasso"
       ],
       "type": "string"
     },
@@ -30986,6 +31108,9 @@
             },
             {
               "$ref": "#/definitions/IntervalSelectionConfig"
+            },
+            {
+              "$ref": "#/definitions/LassoSelectionConfig"
             }
           ],
           "description": "Determines the default event processing and data query for the selection. Vega-Lite currently supports two selection types:\n\n- `\"point\"` -- to select multiple discrete data values; the first value is selected on `click` and additional values toggled on shift-click.\n- `\"interval\"` -- to select a continuous range of data values on `drag`."
