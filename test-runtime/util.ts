@@ -1,5 +1,6 @@
 // @ts-expect-error - vega does not yet export resetSVGDefIds
 import {parse, View, resetSVGDefIds} from 'vega';
+import {stringValue} from 'vega-util';
 import {compile} from '../src/index.js';
 import {IntervalSelectionConfigWithoutType, SelectionResolution, SelectionType} from '../src/selection.js';
 import {NormalizedLayerSpec, NormalizedUnitSpec, TopLevelSpec} from '../src/spec/index.js';
@@ -64,7 +65,6 @@ export const hits = {
     facet: [2, 6, 9],
     facet_clear: [3, 4, 8],
   },
-
   interval: {
     drag: [
       [5, 14],
@@ -253,6 +253,14 @@ export function parentSelector(compositeType: ComposeType, index: number) {
   return compositeType === 'facet' ? `cell > g:nth-child(${index + 1})` : `${UNIT_NAMES.repeat[index]}_group`;
 }
 
+export function region(id: number, parent?: string, targetBrush?: boolean) {
+  return `circleRegion(${stringValue(parent)}, ${!!targetBrush}, ${id})`;
+}
+
+export function regionByPolygon(id: number, polygon: [number, number][], parent?: string, targetBrush?: boolean) {
+  return `polygonRegion(${stringValue(parent)}, ${!!targetBrush}, ${id}, ${JSON.stringify(polygon)})`;
+}
+
 export type BrushKeys = keyof typeof hits.interval;
 export async function brush(view: View, key: BrushKeys, idx: number, parent?: string, targetBrush?: boolean) {
   const h = hits.interval[key][idx];
@@ -386,4 +394,16 @@ export async function zoom(view: View, id: number, delta: number, parent: string
     deltaZ: Math.sign(delta),
   });
   return (await view.runAsync()).data('sel_store');
+}
+
+
+export function getState(signals: string[], data: string[]) {
+  return `getState(${JSON.stringify(signals)}, ${JSON.stringify(data)})`;
+}
+export function getSignal(name: string) {
+  return `getSignal('${name}')`;
+}
+
+export function setSignal(name: string, value: any) {
+  return `setSignal(${stringValue(name)}, ${value})`;
 }

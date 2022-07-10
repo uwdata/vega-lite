@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="/node_modules/vega/build/vega.js"></script>
+    <script src="/build/vega-lite.js"></script>
+  </head>
+  <body>
+    <div id="vis"></div>
+
+    <script type="text/javascript">
+      // global
+      var view = null;
+
+      function embed(vlSpec) {
+        if (view) {
+          view.finalize();
+        }
+
+        const vgSpec = vegaLite.compile(vlSpec).spec;
+        view = new vega.View(vega.parse(vgSpec)).renderer('svg').initialize('#vis').run();
+      }
+
+      const winSrc = ['pointermove', 'pointerup'];
+      function pointerEvt(type, target, opts) {
+        opts.bubbles = true;
+        target = winSrc.indexOf(type) < 0 ? target : window;
+
+        target.dispatchEvent(
+          new PointerEvent('pointermove', {...opts, clientX: opts.clientX - 5, clientY: opts.clientY - 5})
+        );
+
+        target.dispatchEvent(new PointerEvent('pointermove', opts));
+
+        target.dispatchEvent(type === 'wheel' ? new WheelEvent('wheel', opts) : new PointerEvent(type, opts));
+
+        target.dispatchEvent(
+          new PointerEvent('pointermove', {...opts, clientX: opts.clientX + 5, clientY: opts.clientY + 5})
+        );
+      }
+
+      function pureMouseEvt(type, target, opts) {
+        opts.bubbles = true;
+        target = winSrc.indexOf(type) < 0 ? target : window;
+
+        target.dispatchEvent(type === 'wheel' ? new WheelEvent('wheel', opts) : new MouseEvent(type, opts));
+      }
+
+      function pureClear(id, parent, targetBrush) {
+        const el0 = mark(id, parent);
+        const [clientX, clientY] = coords(el0);
+
+        pureMouseEvt('mousedown', el0, {clientX, clientY});
+        pureMouseEvt('mouseup', window, {clientX, clientY});
+        pureMouseEvt('click', el0, {clientX, clientY});
+      }
+
+      function mark(id, parent) {
+        return document.querySelector((parent ? `g.${parent} ` : '') + `g.mark-symbol.role-mark path:nth-child(${id})`);
+      }
+
+      function coords(el) {
+        const rect = el.getBoundingClientRect();
+        return [Math.ceil(rect.left + rect.width / 2), Math.ceil(rect.top + rect.height / 2)];
+      }
+
+      function pointOnCircle(point, radius, angle) {
+        return {clientX: point.clientX + radius * Math.cos(angle), clientY: point.clientY + radius * Math.sin(angle)}
+      }
+
+      function brushOrEl(el, parent, _) {
+        return !_ ? el : document.querySelector((parent ? `g.${parent} ` : '') + 'g.sel_brush > path');
+      }
+
+      function click(el, evt) {
+        pointerEvt('pointerdown', el, evt);
+        pointerEvt('pointerup', window, evt);
+        pointerEvt('click', el, evt);
+      }
+
+      async function brush(id0, id1, parent, targetBrush) {
+        const el0 = mark(id0, parent);
+        const el1 = mark(id1, parent);
+        const [mdX, mdY] = coords(el0);
+        const [muX, muY] = coords(el1);
+        pointerEvt('pointerdown', brushOrEl(el0, parent, targetBrush), {clientX: mdX, clientY: mdY});
+        pointerEvt('pointerup', window, {clientX: muX, clientY: muY});
+        return (await view.runAsync()).data('sel_store');
+      }
+
+      async function polygonRegion(parent, targetBrush, id, shape) {
+        const el0 = mark(id, parent);
+        const [mdX, mdY] = coords(el0);
+
+        shape.forEach((e, i) => {
+          const p = {clientX: mdX + e[0], clientY: mdY + e[1]}
+          if (i === 0) {
+            mouseEvt('mousedown', brushOrEl(el0, parent, targetBrush), p);
+          } else if (i === shape.length - 1) {
+            mouseEvt('mouseup', window, p);
+          } else {
+            pureMouseEvt('mousemove', brushOrEl(el0, parent, targetBrush), p);
+          }
+        })
+
+        return (await view.runAsync()).data('sel_store');
+      }
+
+      async function circleRegion(parent, targetBrush, id) {
+        const radius = 40;
+        const segments = 20;
+
+        const el0 = mark(id, parent);
+        const [mdX, mdY] = coords(el0);
+
+        for (let i = 0; i < segments; i++) {
+          if (i === 0) {
+            mouseEvt('mousedown', brushOrEl(el0, parent, targetBrush), pointOnCircle({clientX: mdX, clientY: mdY}, radius, 0));
+          } else if (i === segments - 1) {
+            mouseEvt('mouseup', window, pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI));
+          } else {
+            pureMouseEvt('mousemove', brushOrEl(el0, parent, targetBrush), pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI));
+          }
+        }
+
+        return (await view.runAsync()).data('sel_store');
+      }
+
+      async function pt(id, parent, shiftKey) {
+        const el = mark(id, parent);
+        const [clientX, clientY] = coords(el);
+        click(el, {clientX, clientY, shiftKey});
+        return (await view.runAsync()).data('sel_store');
+      }
+
+      async function clear(id, parent, shiftKey) {
+        const bg = document.querySelector((parent ? `g.${parent} ` : '') + 'path.background');
+        const el = mark(id, parent);
+        let [clientX, clientY] = coords(el);
+        clientX += 10;
+        clientY -= 10;
+        click(bg, {clientX, clientY, shiftKey});
+        return (await view.runAsync()).data('sel_store');
+      }
+
+      async function zoom(id, delta, parent, targetBrush) {
+        const el = mark(id, parent);
+        const [clientX, clientY] = coords(el);
+        pointerEvt('wheel', brushOrEl(el, parent, targetBrush), {
+          clientX,
+          clientY,
+          deltaX: delta,
+          deltaY: delta,
+          deltaZ: delta
+        });
+        pointerEvt('wheel', brushOrEl(el, parent, targetBrush), {
+          clientX,
+          clientY,
+          deltaX: Math.sign(delta),
+          deltaY: Math.sign(delta),
+          deltaZ: Math.sign(delta)
+        });
+        return (await view.runAsync()).data('sel_store');
+      }
+
+      async function getState(signals, data) {
+        (await view.runAsync())
+        return {
+          signals: signals.reduce((o, s) => {
+            o[s] = view.signal(s);
+            return o;
+          }, {}),
+          data: data.reduce((o, d) => {
+            o[d] = view.data(d);
+            return o;
+          }, {})
+        };
+      }
+
+      async function getSignal(signal) {
+        return (await view.runAsync()).signal(signal);
+      }
+
+      async function setSignal(name, value) {
+        return (await view.signal(name, value).runAsync());
+      }
+    </script>
+  </body>
+</html>

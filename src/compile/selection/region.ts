@@ -1,13 +1,13 @@
-import {OnEvent, Signal, Stream} from 'vega';
+import {OnEvent, Signal} from 'vega';
 import {stringValue} from 'vega-util';
-import {SelectionCompiler, SelectionComponent, TUPLE, unitName} from '.';
-import {warn} from '../../log';
-import {BRUSH} from './interval';
-import scales from './scales';
+import {SelectionCompiler, TUPLE, unitName} from './index.js';
+import {warn} from '../../log/index.js';
+import {BRUSH} from './interval.js';
+import scales from './scales.js';
 export const SCREEN_PATH = '_screen_path';
 
-const lasso: SelectionCompiler<'lasso'> = {
-  defined: selCmpt => selCmpt.type === 'lasso',
+const region: SelectionCompiler<'region'> = {
+  defined: selCmpt => selCmpt.type === 'region',
 
   signals: (model, selCmpt, signals) => {
     const name = selCmpt.name;
@@ -30,18 +30,23 @@ const lasso: SelectionCompiler<'lasso'> = {
       ]
     });
 
-    const on = events(selCmpt, (def: OnEvent[], evt: Stream) => {
+    const regionEvents = selCmpt.events.reduce((on, evt) => {
+      if (!evt.between) {
+        warn(`${evt} is not an ordered event stream for region selections.`);
+        return on;
+      }
+
       return [
-        ...def,
+        ...on,
         {events: evt.between[0], update: `[[x(unit), y(unit)]]`},
         {events: evt, update: `lassoAppend(${screenPathName}, clamp(x(unit), 0, ${w}), clamp(y(unit), 0, ${h}))`}
       ];
-    });
+    }, [] as OnEvent[]);
 
     signalsToAdd.push({
       name: screenPathName,
       init: '[]',
-      on: on
+      on: regionEvents
     });
 
     return [...signals, ...signalsToAdd];
@@ -72,7 +77,6 @@ const lasso: SelectionCompiler<'lasso'> = {
           },
           update: {
             path: {
-              test: true,
               signal: `lassoPath(${screenPathName})`
             }
           }
@@ -83,14 +87,4 @@ const lasso: SelectionCompiler<'lasso'> = {
   }
 };
 
-function events(selCmpt: SelectionComponent<'lasso'>, cb: (def: OnEvent[], evt: Stream) => OnEvent[]): OnEvent[] {
-  return selCmpt.events.reduce((on, evt) => {
-    if (!evt.between) {
-      warn(`${evt} is not an ordered event stream for lasso selections.`);
-      return on;
-    }
-    return cb(on, evt);
-  }, [] as OnEvent[]);
-}
-
-export default lasso;
+export default region;

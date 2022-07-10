@@ -7,15 +7,13 @@ import {ParameterName} from './parameter.js';
 import {Dict} from './util.js';
 
 export const SELECTION_ID = '_vgsid_';
-export type SelectionType = 'point' | 'interval' | 'lasso';
+export type SelectionType = 'point' | 'interval' | 'region';
 export type SelectionResolution = 'global' | 'union' | 'intersect';
 
 export type SelectionInit = PrimitiveValue | DateTime;
 export type SelectionInitInterval = Vector2<boolean> | Vector2<number> | Vector2<string> | Vector2<DateTime>;
-export type SelectionInitLasso = number[];
 export type SelectionInitMapping = Dict<SelectionInit>;
 export type SelectionInitIntervalMapping = Dict<SelectionInitInterval>;
-export type SelectionInitLassoMapping = Dict<SelectionInitLasso>;
 export type LegendStreamBinding = {legend: string | Stream};
 export type LegendBinding = 'legend' | LegendStreamBinding;
 
@@ -200,10 +198,10 @@ export interface IntervalSelectionConfig extends BaseSelectionConfig<'interval'>
   mark?: BrushConfig;
 }
 
-export interface LassoSelectionConfig extends BaseSelectionConfig<'lasso'> {
+export interface RegionSelectionConfig extends BaseSelectionConfig<'region'> {
   /**
-   * A lasso selection also adds a path mark to depict the
-   * shape of the lasso. The `mark` property can be used to customize the
+   * A region selection also adds a path mark to depict the
+   * shape of the region. The `mark` property can be used to customize the
    * appearance of the mark.
    *
    * __See also:__ [`mark` examples](https://vega.github.io/vega-lite/docs/selection.html#mark) in the documentation.
@@ -237,8 +235,8 @@ export interface SelectionParameter<T extends SelectionType = SelectionType> {
     ? PointSelectionConfig
     : T extends 'interval'
     ? IntervalSelectionConfig
-    : T extends 'lasso'
-    ? LassoSelectionConfig
+    : T extends 'region'
+    ? RegionSelectionConfig
     : never);
 
   /**
@@ -309,7 +307,7 @@ export type PointSelectionConfigWithoutType = Omit<PointSelectionConfig, 'type'>
 
 export type IntervalSelectionConfigWithoutType = Omit<IntervalSelectionConfig, 'type'>;
 
-export type LassoSelectionConfigWithoutType = Omit<LassoSelectionConfig, 'type'>;
+export type RegionSelectionConfigWithoutType = Omit<RegionSelectionConfig, 'type'>;
 
 export interface SelectionConfig {
   /**
@@ -330,10 +328,10 @@ export interface SelectionConfig {
   interval?: IntervalSelectionConfigWithoutType;
 
   /**
-   * The default definition for an [`lasso`](https://vega.github.io/vega-lite/docs/parameter.html#select) selection. All properties and transformations
-   * for an lasso selection definition (except `type`) may be specified here.
+   * The default definition for an [`region`](https://vega.github.io/vega-lite/docs/parameter.html#select) selection. All properties and transformations
+   * for an region selection definition (except `type`) may be specified here.
    */
-  lasso?: LassoSelectionConfigWithoutType;
+  region?: RegionSelectionConfigWithoutType;
 }
 
 export const defaultConfig: SelectionConfig = {
@@ -353,7 +351,7 @@ export const defaultConfig: SelectionConfig = {
     resolve: 'global',
     clear: 'dblclick',
   },
-  lasso: {
+  region: {
     on: '[mousedown, window:mouseup] > window:mousemove!',
     resolve: 'global',
     fields: [SELECTION_ID],
