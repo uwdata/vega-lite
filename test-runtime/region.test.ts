@@ -2,9 +2,7 @@ import {TopLevelSpec} from '../src';
 import {SelectionType} from '../src/selection';
 import {clear, embedFn, region, regionByPolygon, spec, testRenderFn} from './util';
 import {Page} from 'puppeteer/lib/cjs/puppeteer/common/Page';
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 describe('interval selections at runtime in unit views', () => {
   let page: Page;
   let embed: (specification: TopLevelSpec) => Promise<void>;
