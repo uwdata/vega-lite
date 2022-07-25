@@ -1,0 +1,43 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "data": {"url": "data/cars.json", "format": {"type": "json"}},
+  "vconcat": [
+    {
+      "mark": "point",
+      "encoding": {
+        "x": {"field": "Horsepower", "type": "quantitative"},
+        "y": {"field": "Miles_per_Gallon", "type": "quantitative"}
+      },
+      "params": [
+        {
+          "name": "brush",
+          "select": {
+            "type": "region",
+            "mark": {
+              "fill": "#333",
+              "stroke": "#d95f02",
+              "strokeDash": [2, 8],
+              "strokeWidth": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "mark": "point",
+      "encoding": {
+        "x": {
+          "field": "Acceleration",
+          "type": "quantitative",
+          "scale": {"domain": [0, 25]}
+        },
+        "y": {
+          "field": "Displacement",
+          "type": "quantitative",
+          "scale": {"domain": [0, 500]}
+        }
+      },
+      "transform": [{"filter": {"param": "brush", "empty": true}}]
+    }
+  ]
+}
