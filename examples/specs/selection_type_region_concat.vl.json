@@ -7,7 +7,15 @@
       "mark": "point",
       "params": [{
         "name": "brush",
-        "select": "region"
+        "select": {
+          "type": "region",
+          "mark": {
+            "fill": "#333",
+            "stroke": "#d95f02",
+            "strokeDash": [2, 8],
+            "strokeWidth": 2
+          }
+        }
       }],
       "encoding": {
         "x": {
@@ -21,6 +29,11 @@
       }
     },
     {
+      "transform": [
+        {
+          "filter": "brush"
+        }
+      ],
       "mark": "point",
       "encoding": {
         "x": {
