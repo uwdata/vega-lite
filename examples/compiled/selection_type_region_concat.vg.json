@@ -1,5 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Two vertically concatenated charts that show a histogram of precipitation in Seattle and the relationship between min and max temperature.",
   "background": "white",
   "padding": 5,
   "width": 200,
@@ -28,10 +29,6 @@
       "name": "data_1",
       "source": "source_0",
       "transform": [
-        {
-          "type": "filter",
-          "expr": "!length(data(\"brush_store\")) || vlSelectionIdTest(\"brush_store\", datum)"
-        },
         {
           "type": "filter",
           "expr": "isValid(datum[\"Acceleration\"]) && isFinite(+datum[\"Acceleration\"]) && isValid(datum[\"Displacement\"]) && isFinite(+datum[\"Displacement\"])"
@@ -119,9 +116,9 @@
             "enter": {
               "fill": {"value": "#333"},
               "fillOpacity": {"value": 0.125},
-              "stroke": {"value": "#d95f02"},
+              "stroke": {"value": "gray"},
               "strokeWidth": {"value": 2},
-              "strokeDash": {"value": [2, 8]}
+              "strokeDash": {"value": [8, 5]}
             },
             "update": {"path": {"signal": "lassoPath(brush_screen_path)"}}
           }
