@@ -29,6 +29,7 @@
       "name": "data_1",
       "source": "source_0",
       "transform": [
+        {"type": "filter", "expr": "brush"},
         {
           "type": "filter",
           "expr": "isValid(datum[\"Acceleration\"]) && isFinite(+datum[\"Acceleration\"]) && isValid(datum[\"Displacement\"]) && isFinite(+datum[\"Displacement\"])"
@@ -116,9 +117,9 @@
             "enter": {
               "fill": {"value": "#333"},
               "fillOpacity": {"value": 0.125},
-              "stroke": {"value": "gray"},
+              "stroke": {"value": "#d95f02"},
               "strokeWidth": {"value": 2},
-              "strokeDash": {"value": [8, 5]}
+              "strokeDash": {"value": [2, 8]}
             },
             "update": {"path": {"signal": "lassoPath(brush_screen_path)"}}
           }
