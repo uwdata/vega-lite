@@ -207,14 +207,6 @@ export interface RegionSelectionConfig extends BaseSelectionConfig<'region'> {
    * __See also:__ [`mark` examples](https://vega.github.io/vega-lite/docs/selection.html#mark) in the documentation.
    */
   mark?: BrushConfig;
-
-  /**
-   * An array of field names whose values must match for a data tuple to
-   * fall within the selection.
-   *
-   * __See also:__ The [projection with `encodings` and `fields` section](https://vega.github.io/vega-lite/docs/selection.html#project) in the documentation.
-   */
-  fields?: FieldName[];
 }
 
 export interface SelectionParameter<T extends SelectionType = SelectionType> {
@@ -354,7 +346,6 @@ export const defaultConfig: SelectionConfig = {
   region: {
     on: '[mousedown, window:mouseup] > window:mousemove!',
     resolve: 'global',
-    fields: [SELECTION_ID],
     mark: {fill: '#333', fillOpacity: 0.125, stroke: 'gray', strokeWidth: 2, strokeDash: [8, 5]},
     clear: 'dblclick',
   }
