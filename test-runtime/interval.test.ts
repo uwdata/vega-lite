@@ -194,7 +194,7 @@ describe('interval selections at runtime in unit views', () => {
       const store: any = await brush(view, 'drag', 1);
       expect(store).toHaveLength(13);
       for (const t of store) {
-        expect(t).toHaveProperty('_vgsid_');
+        expect(t).toHaveProperty(SELECTION_ID);
       }
       await expect(await view.toSVG()).toMatchFileSnapshot(`./snapshots/${type}/unit/geo_1.svg`);
     });
@@ -204,7 +204,7 @@ describe('interval selections at runtime in unit views', () => {
       const store: any = await brush(view, 'drag', 0);
       expect(store).toHaveLength(20);
       for (const t of store) {
-        expect(t).toHaveProperty('_vgsid_');
+        expect(t).toHaveProperty(SELECTION_ID);
       }
       await expect(await view.toSVG()).toMatchFileSnapshot(`./snapshots/${type}/unit/geo_0.svg`);
     });

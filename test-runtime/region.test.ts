@@ -1,9 +1,9 @@
 import {TopLevelSpec} from '../src';
-import {SelectionType} from '../src/selection';
-import {clear, embedFn, region, regionByPolygon, spec, testRenderFn} from './util';
+import {SELECTION_ID, SelectionType} from '../src/selection';
+import {clear, embedFn, circleRegion, polygonRegion, spec, testRenderFn, hits} from './util';
 import {Page} from 'puppeteer/lib/cjs/puppeteer/common/Page';
 
-describe('interval selections at runtime in unit views', () => {
+describe('region selections at runtime in unit views', () => {
   let page: Page;
   let embed: (specification: TopLevelSpec) => Promise<void>;
   let testRender: (filename: string) => Promise<void>;
@@ -21,92 +21,46 @@ describe('interval selections at runtime in unit views', () => {
 
   const type: SelectionType = 'region';
 
-  it('circle region test 1', async () => {
-    await embed(spec('unit', 0, {type}));
-    const store = await page.evaluate(region(14));
+  it('should add values to the store for circle regions', async () => {
+    for (const [i, hit] of hits.region.circle.entries()) {
+      await embed(spec('unit', 0, {type}));
+      const store: any = await page.evaluate(circleRegion(hit.id));
 
-    expect(store).toHaveLength(5);
-    expect(store[0].fields).toBeUndefined();
-    expect(store[0].values).toBeUndefined();
+      expect(store).toHaveLength(hit.count);
+      expect(store[0].fields).toBeUndefined();
+      expect(store[0].values).toBeUndefined();
+      for (const t of store) {
+        expect(t).toHaveProperty(SELECTION_ID);
+      }
 
-    await testRender(`circle_0`);
+      await testRender(`circle_${i}`);
+    }
   });
 
-  it('circle region test 2', async () => {
-    await embed(spec('unit', 0, {type}));
-    const store = await page.evaluate(region(3));
+  it('should add values to the store for complex polygons', async () => {
+    for (const [i, hit] of hits.region.polygon.entries()) {
+      await embed(spec('unit', 0, {type}));
+      const store: any = await page.evaluate(polygonRegion(hit.id, hit.coords));
 
-    expect(store).toHaveLength(2);
-    expect(store[0].fields).toBeUndefined();
-    expect(store[0].values).toBeUndefined();
+      expect(store).toHaveLength(hit.count);
+      expect(store[0].fields).toBeUndefined();
+      expect(store[0].values).toBeUndefined();
+      for (const t of store) {
+        expect(t).toHaveProperty(SELECTION_ID);
+      }
 
-    await testRender(`cirlce_1`);
-  });
-
-  it('circle region test 3', async () => {
-    await embed(spec('unit', 0, {type}));
-    const store = await page.evaluate(region(6));
-
-    expect(store).toHaveLength(4);
-    expect(store[0].fields).toBeUndefined();
-    expect(store[0].values).toBeUndefined();
-
-    await testRender(`circle_2`);
-  });
-
-  it('polygon region test 1', async () => {
-    await embed(spec('unit', 0, {type}));
-
-    const store = await page.evaluate(
-      regionByPolygon(6, [
-        [-30, -30],
-        [-30, 30],
-        [30, 30],
-        [30, -30]
-      ])
-    );
-
-    expect(store).toHaveLength(4);
-    expect(store[0].fields).toBeUndefined();
-    expect(store[0].values).toBeUndefined();
-
-    await testRender(`polygon_0`);
-  });
-
-  it('polygon region test 2', async () => {
-    await embed(spec('unit', 0, {type}));
-
-    const l = 30;
-    const h = 15;
-
-    const store = await page.evaluate(
-      regionByPolygon(14, [
-        [-l, -l],
-        [-l, l],
-        [-h, h],
-        [-h, -h],
-        [h, -h],
-        [h, l],
-        [l, l],
-        [l, -l]
-      ])
-    );
-
-    expect(store).toHaveLength(2);
-    expect(store[0].fields).toBeUndefined();
-    expect(store[0].values).toBeUndefined();
-
-    await testRender(`polygon_1`);
+      await testRender(`polygon_${i}`);
+    }
   });
 
   it('should clear out stored extents', async () => {
     await embed(spec('unit', 0, {type}));
-    let store = await page.evaluate(region(14));
 
-    expect(store).toHaveLength(5);
+    const hit = hits.region.circle[0];
+    let store = await page.evaluate(circleRegion(hit.id));
+    expect(store).toHaveLength(hit.count);
 
-    store = await page.evaluate(clear(14));
-
+    store = await page.evaluate(clear(hits.region.circle_clear[0].id));
     expect(store).toBeUndefined();
 
     await testRender(`clear_0`);

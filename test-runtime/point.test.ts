@@ -5,7 +5,7 @@ import {describe, expect, it} from 'vitest';
 
 describe(`point selections at runtime in unit views`, () => {
   const type: SelectionType = 'point';
-  const hits = hitsMaster.discrete;
+  const hits = hitsMaster.point;
 
   it('should add values to the store', async () => {
     for (let i = 0; i < hits.qq.length; i++) {

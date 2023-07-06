@@ -64,7 +64,7 @@
       }
 
       function pointOnCircle(point, radius, angle) {
-        return {clientX: point.clientX + radius * Math.cos(angle), clientY: point.clientY + radius * Math.sin(angle)}
+        return {clientX: point.clientX + radius * Math.cos(angle), clientY: point.clientY + radius * Math.sin(angle)};
       }
 
       function brushOrEl(el, parent, _) {
@@ -87,12 +87,12 @@
         return (await view.runAsync()).data('sel_store');
       }
 
-      async function polygonRegion(parent, targetBrush, id, shape) {
+      async function polygonRegion(id, shape, parent, targetBrush) {
         const el0 = mark(id, parent);
         const [mdX, mdY] = coords(el0);
 
         shape.forEach((e, i) => {
-          const p = {clientX: mdX + e[0], clientY: mdY + e[1]}
+          const p = {clientX: mdX + e[0], clientY: mdY + e[1]};
           if (i === 0) {
             mouseEvt('mousedown', brushOrEl(el0, parent, targetBrush), p);
           } else if (i === shape.length - 1) {
@@ -100,25 +100,34 @@
           } else {
             pureMouseEvt('mousemove', brushOrEl(el0, parent, targetBrush), p);
           }
-        })
+        });
 
         return (await view.runAsync()).data('sel_store');
       }
 
-      async function circleRegion(parent, targetBrush, id) {
-        const radius = 40;
-        const segments = 20;
-
+      async function circleRegion(id, radius, segments, parent, targetBrush) {
         const el0 = mark(id, parent);
         const [mdX, mdY] = coords(el0);
 
         for (let i = 0; i < segments; i++) {
           if (i === 0) {
-            mouseEvt('mousedown', brushOrEl(el0, parent, targetBrush), pointOnCircle({clientX: mdX, clientY: mdY}, radius, 0));
+            mouseEvt(
+              'mousedown',
+              brushOrEl(el0, parent, targetBrush),
+              pointOnCircle({clientX: mdX, clientY: mdY}, radius, 0)
+            );
           } else if (i === segments - 1) {
-            mouseEvt('mouseup', window, pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI));
+            mouseEvt(
+              'mouseup',
+              window,
+              pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI)
+            );
           } else {
-            pureMouseEvt('mousemove', brushOrEl(el0, parent, targetBrush), pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI));
+            pureMouseEvt(
+              'mousemove',
+              brushOrEl(el0, parent, targetBrush),
+              pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI)
+            );
           }
         }
 

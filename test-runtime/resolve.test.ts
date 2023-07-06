@@ -14,7 +14,7 @@ import {describe, expect, it} from 'vitest';
 
 for (const type of selectionTypes) {
   const isInterval = type === 'interval';
-  const hits: any = isInterval ? hitsMaster.interval : hitsMaster.discrete;
+  const hits = hitsMaster[type];
   const fn = isInterval ? brush : pt;
 
   describe(`${type} selections at runtime`, () => {
