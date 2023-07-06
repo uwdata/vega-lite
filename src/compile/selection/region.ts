@@ -4,10 +4,19 @@ import {SelectionCompiler, TUPLE, unitName} from './index.js';
 import {warn} from '../../log/index.js';
 import {BRUSH} from './interval.js';
 import scales from './scales.js';
+import {SELECTION_ID} from '../../selection.js';
+
 export const SCREEN_PATH = '_screen_path';
 
 const region: SelectionCompiler<'region'> = {
   defined: selCmpt => selCmpt.type === 'region',
+
+  parse: (model, selCmpt, selDef) => {
+    // Region selections are only valid over the SELECTION_ID field.
+    // As a result, we don't expose "fields" as a valid property of the interface
+    // and instead hardwire it here during parsing.
+    selDef.select = {type: 'region', fields: [SELECTION_ID]} as any;
+  },
 
   signals: (model, selCmpt, signals) => {
     const name = selCmpt.name;
