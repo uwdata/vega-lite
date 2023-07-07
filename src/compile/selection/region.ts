@@ -1,6 +1,6 @@
 import {OnEvent, Signal} from 'vega';
 import {stringValue} from 'vega-util';
-import {SelectionCompiler, TUPLE, unitName} from './index.js';
+import {SelectionCompiler, STORE, TUPLE, unitName} from './index.js';
 import {warn} from '../../log/index.js';
 import {BRUSH} from './interval.js';
 import scales from './scales.js';
@@ -66,11 +66,14 @@ const region: SelectionCompiler<'region'> = {
     const {fill, fillOpacity, stroke, strokeDash, strokeWidth} = selCmpt.mark;
 
     const screenPathName = `${name}${SCREEN_PATH}`;
+    const store = `data(${stringValue(selCmpt.name + STORE)})`;
 
     // Do not add a brush if we're binding to scales.
     if (scales.defined(selCmpt)) {
       return marks;
     }
+
+    const path = {signal: `lassoPath(${screenPathName})`};
 
     return [
       {
@@ -85,9 +88,21 @@ const region: SelectionCompiler<'region'> = {
             strokeDash: {value: strokeDash}
           },
           update: {
-            path: {
-              signal: `lassoPath(${screenPathName})`
-            }
+            path:
+              // If the selection is resolved to global, only a single region is in the store.
+              // We wrap a region mark's path encoding with a production rule to hide the mark
+              // if it corresponds to a unit different from the one in the store.
+              selCmpt.resolve === 'global'
+                ? [
+                  {
+                    test: `${store}.length && ${store}[0].unit === ${unitName(model)}`,
+                    ...path
+                  },
+                  {
+                    value: '[]'
+                  }
+                ]
+                : path
           }
         }
       },

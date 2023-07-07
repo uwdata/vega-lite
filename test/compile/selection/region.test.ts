@@ -99,7 +99,15 @@ describe('Multi Selection', () => {
             strokeWidth: {value: 4},
             strokeDash: {value: [10, 5]}
           },
-          update: {path: {signal: 'lassoPath(two_screen_path)'}}
+          update: {
+            path: [
+              {
+                test: 'data("two_store").length && data("two_store")[0].unit === ""',
+                signal: 'lassoPath(two_screen_path)'
+              },
+              {value: '[]'}
+            ]
+          }
         }
       }
     ]);
