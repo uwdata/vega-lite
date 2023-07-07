@@ -45,15 +45,6 @@
         target.dispatchEvent(type === 'wheel' ? new WheelEvent('wheel', opts) : new MouseEvent(type, opts));
       }
 
-      function pureClear(id, parent, targetBrush) {
-        const el0 = mark(id, parent);
-        const [clientX, clientY] = coords(el0);
-
-        pureMouseEvt('mousedown', el0, {clientX, clientY});
-        pureMouseEvt('mouseup', window, {clientX, clientY});
-        pureMouseEvt('click', el0, {clientX, clientY});
-      }
-
       function mark(id, parent) {
         return document.querySelector((parent ? `g.${parent} ` : '') + `g.mark-symbol.role-mark path:nth-child(${id})`);
       }

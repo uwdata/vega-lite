@@ -6,8 +6,8 @@ import {IntervalSelectionConfigWithoutType, SelectionResolution, SelectionType} 
 import {NormalizedLayerSpec, NormalizedUnitSpec, TopLevelSpec} from '../src/spec/index.js';
 
 export type ComposeType = 'unit' | 'repeat' | 'facet';
-export const selectionTypes: SelectionType[] = ['point', 'interval'];
-export const compositeTypes = ['repeat', 'facet'] as const;
+export const selectionTypes: SelectionType[] = ['point', 'interval', 'region'];
+export const compositeTypes: ComposeType[] = ['repeat', 'facet'];
 export const resolutions: SelectionResolution[] = ['union', 'intersect'];
 
 export const bound = 'bound';
@@ -134,7 +134,13 @@ export const hits = {
         ],
         count: 2
       }
-    ]
+    ],
+
+    facet: [2, 4, 7],
+    facet_clear: [3, 5, 8],
+
+    repeat: [5, 10, 16],
+    repeat_clear: [13, 14, 2]
   }
 };
 
@@ -293,12 +299,37 @@ export function region(id: number, parent?: string, targetBrush?: boolean) {
   return `circleRegion(${stringValue(parent)}, ${!!targetBrush}, ${id})`;
 }
 
-export function circleRegion(idx: number, parent?: string, targetBrush?: boolean, radius = 40, segments = 20) {
+export function circleRegion(idx: number | {
+  id: number;
+  count?: number;
+} | {
+  id: number;
+  coords: number[][];
+  count: number;
+}, parent?: string, targetBrush?: boolean, radius = 40, segments = 20) {
   return `circleRegion(${idx}, ${radius}, ${segments}, ${stringValue(parent)}, ${!!targetBrush})`;
 }
 
 export function polygonRegion(idx: number, polygon: number[][], parent?: string, targetBrush?: boolean) {
   return `polygonRegion(${idx}, ${JSON.stringify(polygon)}, ${stringValue(parent)}, ${!!targetBrush})`;
+}
+
+export function clearRegion(idx: number | {
+  id: number;
+  count?: number;
+} | {
+  id: number;
+  coords: number[][];
+  count: number;
+}, parent?: string, targetBrush?: boolean) {
+  return `clear(${idx}, ${stringValue(parent)}, ${!!targetBrush})`;
+}
+
+export function multiviewRegion(key: keyof typeof hits.region, idx: number, parent?: string, targetBrush?: boolean) {
+  // TODO: region clearing will need to support object intake
+  return key.match('_clear')
+    ? clearRegion(hits.region[key][idx], parent, targetBrush)
+    : circleRegion(hits.region[key][idx], parent, targetBrush, 10);
 }
 
 export type BrushKeys = keyof typeof hits.interval;

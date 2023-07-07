@@ -2,6 +2,7 @@ import {
   brush,
   compositeTypes,
   hits as hitsMaster,
+  multiviewRegion,
   parentSelector,
   pt,
   resolutions,
@@ -12,10 +13,15 @@ import {
 } from './util.js';
 import {describe, expect, it} from 'vitest';
 
+const fns = {
+  point: pt,
+  interval: brush,
+  region: multiviewRegion
+};
+
 for (const type of selectionTypes) {
-  const isInterval = type === 'interval';
   const hits = hitsMaster[type];
-  const fn = isInterval ? brush : pt;
+  const fn = fns[type];
 
   describe(`${type} selections at runtime`, () => {
     compositeTypes.forEach((specType) => {
@@ -28,7 +34,7 @@ for (const type of selectionTypes) {
           const selection = {
             type,
             resolve: 'global',
-            ...(specType === 'facet' ? {encodings: ['y']} : {}),
+            ...(specType === 'facet' && type !== 'region' ? {encodings: ['y']} : {})
           };
 
           for (let i = 0; i < hits[specType].length; i++) {
@@ -53,7 +59,7 @@ for (const type of selectionTypes) {
           const selection = {
             type,
             resolve,
-            ...(specType === 'facet' ? {encodings: ['x']} : {}),
+            ...(specType === 'facet' && type !== 'region' ? {encodings: ['x']} : {})
           };
 
           /**

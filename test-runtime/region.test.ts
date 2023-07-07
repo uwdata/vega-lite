@@ -1,6 +1,6 @@
 import {TopLevelSpec} from '../src';
 import {SELECTION_ID, SelectionType} from '../src/selection';
-import {clear, embedFn, circleRegion, polygonRegion, spec, testRenderFn, hits} from './util';
+import {clearRegion, embedFn, circleRegion, polygonRegion, spec, testRenderFn, hits} from './util';
 import {Page} from 'puppeteer/lib/cjs/puppeteer/common/Page';
 
 describe('region selections at runtime in unit views', () => {
@@ -60,8 +60,8 @@ describe('region selections at runtime in unit views', () => {
     let store = await page.evaluate(circleRegion(hit.id));
     expect(store).toHaveLength(hit.count);
 
-    store = await page.evaluate(clear(hits.region.circle_clear[0].id));
-    expect(store).toBeUndefined();
+    store = await page.evaluate(clearRegion(hits.region.circle_clear[0].id));
+    expect(store).toHaveLength(0);
 
     await testRender(`clear_0`);
   });
