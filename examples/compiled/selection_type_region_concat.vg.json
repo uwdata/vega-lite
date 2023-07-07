@@ -5,8 +5,16 @@
   "padding": 5,
   "width": 200,
   "data": [
-    {"name": "brush_store"},
-    {"name": "source_0", "url": "data/cars.json", "format": {"type": "json"}},
+    {
+      "name": "brush_store",
+      "transform": [{"type": "collect", "sort": {"field": "_vgsid_"}}]
+    },
+    {
+      "name": "source_0",
+      "url": "data/cars.json",
+      "format": {"type": "json"},
+      "transform": [{"type": "identifier", "as": "_vgsid_"}]
+    },
     {
       "name": "data_0",
       "source": "source_0",
@@ -91,7 +99,6 @@
             }
           ]
         },
-        {"name": "brush_tuple_fields", "value": []},
         {
           "name": "brush_modify",
           "on": [
@@ -114,7 +121,15 @@
               "strokeWidth": {"value": 2},
               "strokeDash": {"value": [2, 8]}
             },
-            "update": {"path": {"signal": "lassoPath(brush_screen_path)"}}
+            "update": {
+              "path": [
+                {
+                  "test": "data(\"brush_store\").length && data(\"brush_store\")[0].unit === \"concat_0\"",
+                  "signal": "lassoPath(brush_screen_path)"
+                },
+                {"value": "[]"}
+              ]
+            }
           }
         },
         {

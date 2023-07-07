@@ -6,12 +6,16 @@
   "height": 200,
   "style": "cell",
   "data": [
-    {"name": "brush_store"},
+    {
+      "name": "brush_store",
+      "transform": [{"type": "collect", "sort": {"field": "_vgsid_"}}]
+    },
     {
       "name": "source_0",
       "url": "data/cars.json",
       "format": {"type": "json"},
       "transform": [
+        {"type": "identifier", "as": "_vgsid_"},
         {
           "type": "filter",
           "expr": "isValid(datum[\"Horsepower\"]) && isFinite(+datum[\"Horsepower\"]) && isValid(datum[\"Miles_per_Gallon\"]) && isFinite(+datum[\"Miles_per_Gallon\"])"
@@ -63,7 +67,6 @@
         }
       ]
     },
-    {"name": "brush_tuple_fields", "value": []},
     {
       "name": "brush_modify",
       "on": [
@@ -86,7 +89,15 @@
           "strokeWidth": {"value": 2},
           "strokeDash": {"value": [8, 5]}
         },
-        "update": {"path": {"signal": "lassoPath(brush_screen_path)"}}
+        "update": {
+          "path": [
+            {
+              "test": "data(\"brush_store\").length && data(\"brush_store\")[0].unit === \"\"",
+              "signal": "lassoPath(brush_screen_path)"
+            },
+            {"value": "[]"}
+          ]
+        }
       }
     },
     {
@@ -101,7 +112,7 @@
           "fill": {"value": "transparent"},
           "stroke": [
             {
-              "test": "!length(data(\"brush_store\")) || vlSelectionTest(\"brush_store\", datum)",
+              "test": "!length(data(\"brush_store\")) || vlSelectionIdTest(\"brush_store\", datum)",
               "scale": "color",
               "field": "Cylinders"
             },
