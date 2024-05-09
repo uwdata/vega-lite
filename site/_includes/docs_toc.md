@@ -290,7 +290,6 @@
         - [Nominal]({{site.baseurl}}/docs/type.html#nominal)
         - [GeoJSON]({{site.baseurl}}/docs/type.html#geojson)
     - [Value]({{site.baseurl}}/docs/value.html)
-        - [Examples]({{site.baseurl}}/docs/value.html#examples)
 - [Projection]({{site.baseurl}}/docs/projection.html)
     - [Documentation Overview]({{site.baseurl}}/docs/projection.html#documentation-overview)
     - [Projection Properties]({{site.baseurl}}/docs/projection.html#projection-properties)
