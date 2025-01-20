@@ -177,6 +177,7 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
     const dimensionDef = encoding[dimensionChannel];
     const dimensionField = isFieldDef(dimensionDef) ? vgField(dimensionDef, {}) : undefined;
     const hasSameDimensionAndStackedField = dimensionField && dimensionField === stackedField;
+    // This change breaks existing cartesian tests, just pushing it up to start the discussion.
     const hasSameDimensionAndStackedChannel = dimensionChannel === fieldChannel;
 
     if (!hasSameDimensionAndStackedField && hasSameDimensionAndStackedChannel) {
@@ -225,8 +226,6 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
     return sc;
   }, []);
 
-  console.log('stackBy', stackBy);
-
   // Automatically determine offset
   let offset: StackOffset;
   if (stackedFieldDef.stack !== undefined) {
@@ -270,12 +269,6 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
   ) {
     log.warn(log.message.stackNonSummativeAggregate(stackedFieldDef.aggregate));
   }
-
-  console.log('log', {
-    groupbyChannels,
-    groupbyFields,
-    stackedField
-  });
 
   return {
     groupbyChannels,

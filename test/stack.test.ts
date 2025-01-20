@@ -448,7 +448,7 @@ describe('stack', () => {
       expect(_stack.stackBy[0].channel).toBe('color');
     });
 
-    it('should be correct for radial chart', () => {
+    it('should be correct for radial chart with same radius and theta field', () => {
       const spec: TopLevel<NormalizedUnitSpec> = {
         data: {url: 'data/barley.json'},
         mark: 'arc',
@@ -463,6 +463,27 @@ describe('stack', () => {
       };
       const _stack = stack(spec.mark, spec.encoding);
       expect(_stack.fieldChannel).toBe('theta');
+      expect(_stack.groupbyChannels).toHaveLength(0);
+      expect(_stack.groupbyFields.size).toBe(0);
+    });
+
+    it('should be correct for radial chart with different radius and theta fields', () => {
+      const spec: TopLevel<NormalizedUnitSpec> = {
+        data: {url: 'data/barley.json'},
+        mark: 'arc',
+        encoding: {
+          theta: {field: 'year', type: 'quantitative', stack: true},
+          radius: {
+            field: 'variety',
+            type: 'quantitative',
+            scale: {type: 'sqrt', zero: true, range: [20, 100]}
+          }
+        }
+      };
+      const _stack = stack(spec.mark, spec.encoding);
+      expect(_stack.fieldChannel).toBe('theta');
+      expect(_stack.groupbyChannels).toHaveLength(0);
+      expect(_stack.groupbyFields.size).toBe(0);
     });
   });
 
