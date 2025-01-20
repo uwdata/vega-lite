@@ -1,6 +1,6 @@
 import {array, hasOwnProperty, isBoolean} from 'vega-util';
 import {Aggregate, SUM_OPS} from './aggregate';
-import {getSecondaryRangeChannel, NonPositionChannel, NONPOSITION_CHANNELS} from './channel';
+import {getSecondaryRangeChannel, NonPositionChannel, NONPOSITION_CHANNELS, isPolarPositionChannel} from './channel';
 import {
   channelDefType,
   FieldName,
@@ -85,7 +85,7 @@ function potentialStackedChannel(
   x: 'x' | 'theta',
   {orient, type: mark}: MarkDef
 ): 'x' | 'y' | 'theta' | 'radius' | undefined {
-  const y = x === 'x' ? 'y' : 'radius';
+  const y = x === 'x' ? 'y' : 'radius'; // TKTK: what if we stack along theta?
 
   const isCartesianBarOrArea = x === 'x' && ['bar', 'area'].includes(mark);
 
@@ -177,14 +177,22 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
     const dimensionDef = encoding[dimensionChannel];
     const dimensionField = isFieldDef(dimensionDef) ? vgField(dimensionDef, {}) : undefined;
     const hasSameDimensionAndStackedField = dimensionField && dimensionField === stackedField;
-    // This change breaks existing cartesian tests, just pushing it up to start the discussion.
-    const hasSameDimensionAndStackedChannel = dimensionChannel === fieldChannel;
 
-    if (!hasSameDimensionAndStackedField && hasSameDimensionAndStackedChannel) {
+    // This change breaks cartesian tests, just pushing to start the discussion. When dev'ing locally, try removing this condition.
+    // TBD: we should only enter this branch if there's also a "color" and maybe a group channel?
+    const isPolar = isPolarPositionChannel(fieldChannel) || isPolarPositionChannel(dimensionChannel);
+
+    // TODO: Figure out why groupBy is only sometimes necessary?
+    // Unclear why the test case and the bug report differ in whether a groupBy should be supplied to vega or not
+    // const shouldAddPolarGroupBy = dimensionField === 'dir' || (fieldChannel === dimensionChannel);
+    const shouldAddPolarGroupBy = (fieldChannel === dimensionChannel);
+
+    // if (!hasSameDimensionAndStackedField) {
+    if (!hasSameDimensionAndStackedField && (isPolar ? (shouldAddPolarGroupBy) : true)) {
       // avoid grouping by the stacked field
-      // TKTK: find ot why
+      // TKTK: find out why
       groupbyChannels.push(dimensionChannel);
-      groupbyFields.add(dimensionField); // Iinvestigate meee
+      groupbyFields.add(dimensionField);
     }
   }
 
@@ -241,6 +249,7 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
   if (!offset || !isStackOffset(offset)) {
     return null;
   }
+  // console.log('offset', offset);
 
   if (isAggregate(encoding) && stackBy.length === 0) {
     return null;
