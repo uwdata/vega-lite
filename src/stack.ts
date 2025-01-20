@@ -176,11 +176,14 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
   if (encoding[dimensionChannel]) {
     const dimensionDef = encoding[dimensionChannel];
     const dimensionField = isFieldDef(dimensionDef) ? vgField(dimensionDef, {}) : undefined;
+    const hasSameDimensionAndStackedField = dimensionField && dimensionField === stackedField;
+    const hasSameDimensionAndStackedChannel = dimensionChannel === fieldChannel;
 
-    if (dimensionField && dimensionField !== stackedField) {
+    if (!hasSameDimensionAndStackedField && hasSameDimensionAndStackedChannel) {
       // avoid grouping by the stacked field
+      // TKTK: find ot why
       groupbyChannels.push(dimensionChannel);
-      groupbyFields.add(dimensionField);
+      groupbyFields.add(dimensionField); // Iinvestigate meee
     }
   }
 
@@ -221,6 +224,8 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
     }
     return sc;
   }, []);
+
+  console.log('stackBy', stackBy);
 
   // Automatically determine offset
   let offset: StackOffset;
@@ -265,6 +270,12 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
   ) {
     log.warn(log.message.stackNonSummativeAggregate(stackedFieldDef.aggregate));
   }
+
+  console.log('log', {
+    groupbyChannels,
+    groupbyFields,
+    stackedField
+  });
 
   return {
     groupbyChannels,
