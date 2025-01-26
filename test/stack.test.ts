@@ -448,7 +448,7 @@ describe('stack', () => {
       expect(_stack.stackBy[0].channel).toBe('color');
     });
 
-    it('should be correct for radial chart with same radius and theta field', () => {
+    it('should be correct for radial chart with same radius and theta quantitative fields', () => {
       const spec: TopLevel<NormalizedUnitSpec> = {
         data: {url: 'data/barley.json'},
         mark: 'arc',
@@ -467,7 +467,7 @@ describe('stack', () => {
       expect(_stack.groupbyFields.size).toBe(0);
     });
 
-    it('should be correct for radial chart with different radius and theta fields', () => {
+    it('should be correct for radial chart with different radius and theta quantitative fields', () => {
       const spec: TopLevel<NormalizedUnitSpec> = {
         data: {url: 'data/barley.json'},
         mark: 'arc',

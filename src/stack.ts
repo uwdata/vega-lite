@@ -85,7 +85,7 @@ function potentialStackedChannel(
   x: 'x' | 'theta',
   {orient, type: mark}: MarkDef
 ): 'x' | 'y' | 'theta' | 'radius' | undefined {
-  const y = x === 'x' ? 'y' : 'radius'; // TKTK: what if we stack along theta?
+  const y = x === 'x' ? 'y' : 'radius';
 
   const isCartesianBarOrArea = x === 'x' && ['bar', 'area'].includes(mark);
 
@@ -242,8 +242,6 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
   if (!offset || !isStackOffset(offset)) {
     return null;
   }
-  // console.log('offset', offset);
-
   if (isAggregate(encoding) && stackBy.length === 0) {
     return null;
   }

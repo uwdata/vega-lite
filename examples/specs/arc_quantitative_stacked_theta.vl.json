@@ -1,0 +1,40 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "values": [
+      {
+        "segment": 1,
+        "value": 8
+      },
+      {
+        "segment": 2,
+        "value": 7
+      },
+      {
+        "segment": 3,
+        "value": 6
+      }
+    ]
+  },
+  "mark": {
+    "type": "arc",
+    "innerRadius": 20,
+    "stroke": "#fff",
+    "opacity": 0.5
+  },
+  "encoding": {
+    "theta": {
+      "field": "segment",
+      "type": "quantitative",
+      "stack": true
+    },
+    "radius": {
+      "field": "value",
+      "scale": {
+        "type": "sqrt",
+        "zero": true,
+        "rangeMin": 20
+      }
+    }
+  }
+}
