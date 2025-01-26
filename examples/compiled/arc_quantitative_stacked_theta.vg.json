@@ -9,18 +9,9 @@
     {
       "name": "source_0",
       "values": [
-        {
-          "segment": 1,
-          "value": 8
-        },
-        {
-          "segment": 2,
-          "value": 7
-        },
-        {
-          "segment": 3,
-          "value": 6
-        }
+        {"segment": 1, "value": 8},
+        {"segment": 2, "value": 7},
+        {"segment": 3, "value": 6}
       ]
     },
     {
@@ -31,14 +22,8 @@
           "type": "stack",
           "groupby": [],
           "field": "segment",
-          "sort": {
-            "field": [],
-            "order": []
-          },
-          "as": [
-            "segment_start",
-            "segment_end"
-          ],
+          "sort": {"field": [], "order": []},
+          "as": ["segment_start", "segment_end"],
           "offset": "zero"
         },
         {
@@ -52,49 +37,22 @@
     {
       "name": "marks",
       "type": "arc",
-      "style": [
-        "arc"
-      ],
-      "from": {
-        "data": "data_0"
-      },
+      "style": ["arc"],
+      "from": {"data": "data_0"},
       "encode": {
         "update": {
-          "opacity": {
-            "value": 0.5
-          },
-          "stroke": {
-            "value": "#fff"
-          },
-          "innerRadius": {
-            "value": 20
-          },
-          "fill": {
-            "value": "#4c78a8"
-          },
+          "opacity": {"value": 0.5},
+          "stroke": {"value": "#fff"},
+          "innerRadius": {"value": 20},
+          "fill": {"value": "#4c78a8"},
           "description": {
             "signal": "\"segment: \" + (format(datum[\"segment\"], \"\")) + \"; value: \" + (format(datum[\"value\"], \"\"))"
           },
-          "x": {
-            "signal": "width",
-            "mult": 0.5
-          },
-          "y": {
-            "signal": "height",
-            "mult": 0.5
-          },
-          "outerRadius": {
-            "scale": "radius",
-            "field": "value"
-          },
-          "startAngle": {
-            "scale": "theta",
-            "field": "segment_end"
-          },
-          "endAngle": {
-            "scale": "theta",
-            "field": "segment_start"
-          }
+          "x": {"signal": "width", "mult": 0.5},
+          "y": {"signal": "height", "mult": 0.5},
+          "outerRadius": {"scale": "radius", "field": "value"},
+          "startAngle": {"scale": "theta", "field": "segment_end"},
+          "endAngle": {"scale": "theta", "field": "segment_start"}
         }
       }
     }
@@ -103,32 +61,15 @@
     {
       "name": "theta",
       "type": "linear",
-      "domain": {
-        "data": "data_0",
-        "fields": [
-          "segment_start",
-          "segment_end"
-        ]
-      },
-      "range": [
-        0,
-        6.283185307179586
-      ],
+      "domain": {"data": "data_0", "fields": ["segment_start", "segment_end"]},
+      "range": [0, 6.283185307179586],
       "zero": true
     },
     {
       "name": "radius",
       "type": "sqrt",
-      "domain": {
-        "data": "data_0",
-        "field": "value"
-      },
-      "range": [
-        20,
-        {
-          "signal": "min(width,height)/2"
-        }
-      ],
+      "domain": {"data": "data_0", "field": "value"},
+      "range": [20, {"signal": "min(width,height)/2"}],
       "zero": true
     }
   ]
