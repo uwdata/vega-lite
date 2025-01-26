@@ -178,19 +178,12 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
     const dimensionField = isFieldDef(dimensionDef) ? vgField(dimensionDef, {}) : undefined;
     const hasSameDimensionAndStackedField = dimensionField && dimensionField === stackedField;
 
-    // This change breaks cartesian tests, just pushing to start the discussion. When dev'ing locally, try removing this condition.
-    // TBD: we should only enter this branch if there's also a "color" and maybe a group channel?
+    // For polar coordinates, do not set a groupBy when working with quantitative fields.
     const isPolar = isPolarPositionChannel(fieldChannel) || isPolarPositionChannel(dimensionChannel);
+    const shouldAddPolarGroupBy = !isUnbinnedQuantitative(dimensionDef);
 
-    // TODO: Figure out why groupBy is only sometimes necessary?
-    // Unclear why the test case and the bug report differ in whether a groupBy should be supplied to vega or not
-    // const shouldAddPolarGroupBy = dimensionField === 'dir' || (fieldChannel === dimensionChannel);
-    const shouldAddPolarGroupBy = (fieldChannel === dimensionChannel);
-
-    // if (!hasSameDimensionAndStackedField) {
-    if (!hasSameDimensionAndStackedField && (isPolar ? (shouldAddPolarGroupBy) : true)) {
+    if (isPolar ? shouldAddPolarGroupBy : !hasSameDimensionAndStackedField) {
       // avoid grouping by the stacked field
-      // TKTK: find out why
       groupbyChannels.push(dimensionChannel);
       groupbyFields.add(dimensionField);
     }
