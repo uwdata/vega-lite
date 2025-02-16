@@ -163,17 +163,22 @@ function getTopLevelProperties(
       log.warn(log.message.droppingFit());
       autosize.type = 'pad';
     } else if (width === 'step' || height === 'step') {
-      // effectively XOR, because else if
 
       // get step dimension
       const sizeType = width === 'step' ? 'width' : 'height';
-      // log that we're dropping fit for respective channel
-      log.warn(log.message.droppingFit(getPositionScaleChannel(sizeType)));
 
-      // setting type to inverse fit (so if we dropped fit-x, type is now fit-y)
+      // get inverse fit (so if we had fit-x, type is now fit-y)
       const inverseSizeType = sizeType === 'width' ? 'height' : 'width';
-      autosize.type = getFitType(inverseSizeType);
+      const inverseFitType = getFitType(inverseSizeType)
+
+      // check if we need to update the fit type
+      if (autosize.type !== inverseFitType) {
+        // log that we're dropping fit for respective channel
+        log.warn(log.message.droppingFit(getPositionScaleChannel(sizeType)));
+        // setting type to the inverse fit
+        autosize.type = inverseFitType;
     }
+      }
   }
 
   return {
