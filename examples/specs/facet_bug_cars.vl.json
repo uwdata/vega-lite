@@ -1,0 +1,17 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {"url": "data/cars.json"},
+  "facet": {
+    "column": {"field": "Origin", "sort": {"field": "Acceleration", "op": "count"}},
+    "row": {"field": "Cylinders", "sort": {"field": "Horsepower", "op": "count"}}
+  },
+  "spec": {
+      "mark": "point",
+      "encoding": {
+        "x": {"field": "Horsepower", "type": "quantitative"},
+        "y": {"field": "Acceleration", "type": "quantitative"},
+        "color": {"field": "Origin", "type": "nominal"},
+        "shape": {"field": "Cylinders", "type": "nominal"}
+      }
+  }
+}

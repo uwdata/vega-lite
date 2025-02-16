@@ -7,7 +7,7 @@ import {Config} from '../config';
 import {ExprRef, replaceExprRef} from '../expr';
 import * as log from '../log';
 import {hasDiscreteDomain} from '../scale';
-import {DEFAULT_SORT_OP, EncodingSortField, isSortField, SortOrder} from '../sort';
+import {EncodingSortField, isSortField, SortOrder} from '../sort';
 import {NormalizedFacetSpec} from '../spec';
 import {EncodingFacetMapping, FacetFieldDef, FacetMapping, isFacetMapping} from '../spec/facet';
 import {hasProperty, keys} from '../util';
@@ -300,34 +300,20 @@ export class FacetModel extends ModelWithField {
     for (const channel of FACET_CHANNELS) {
       const fieldDef = this.facet[channel];
       if (fieldDef) {
-        groupby.push(vgField(fieldDef));
-
         const {bin, sort} = fieldDef;
+
+        if (isSortField(sort)) {
+          const outputName = facetSortFieldName(fieldDef, sort);
+          groupby.push(outputName);
+        } else if (isArray(sort)) {
+          const outputName = sortArrayIndexField(fieldDef, channel);
+          groupby.push(outputName);
+        } else {
+          groupby.push(vgField(fieldDef));
+        }
 
         if (isBinning(bin)) {
           groupby.push(vgField(fieldDef, {binSuffix: 'end'}));
-        }
-
-        if (isSortField(sort)) {
-          const {field, op = DEFAULT_SORT_OP} = sort;
-          const outputName = facetSortFieldName(fieldDef, sort);
-          if (row && column) {
-            // For crossed facet, use pre-calculate field as it requires a different groupby
-            // For each calculated field, apply max and assign them to the same name as
-            // all values of the same group should be the same anyway.
-            fields.push(outputName);
-            ops.push('max');
-            as.push(outputName);
-          } else {
-            fields.push(field);
-            ops.push(op);
-            as.push(outputName);
-          }
-        } else if (isArray(sort)) {
-          const outputName = sortArrayIndexField(fieldDef, channel);
-          fields.push(outputName);
-          ops.push('max');
-          as.push(outputName);
         }
       }
     }

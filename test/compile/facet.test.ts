@@ -505,10 +505,7 @@ describe('FacetModel', () => {
       const marks = model.assembleMarks();
 
       expect(marks[0].from.facet.aggregate).toEqual({
-        cross: true,
-        fields: ['median_d_by_a', 'median_e_by_b'],
-        ops: ['max', 'max'],
-        as: ['median_d_by_a', 'median_e_by_b']
+        cross: true
       });
 
       expect(marks[0].sort).toEqual({

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "values": [
+      { "first": "B", "second": "a", "value": "B/a"},
+      { "first": "A", "second": "a", "value": "A/a"},
+      { "first": "C", "second": "a", "value": "C/a"},
+      { "first": "B", "second": "b", "value": "B/b"},
+      { "first": "A", "second": "b", "value": "A/b"}
+    ]
+  },
+  "facet": {
+    "row": { "field": "second" },
+    "column": { "field": "first", "sort": ["B","C","A"] }
+  },
+  "spec": {
+    "height": 50,
+    "width": 50,
+    "layer": [
+      {
+        "mark": { "type": "text" },
+        "encoding": {
+          "x": { "value": 25 },
+          "y": { "value": 25 },
+          "text": { "field": "value" }
+        }
+      }
+    ]
+  }
+}
