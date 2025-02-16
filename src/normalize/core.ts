@@ -68,7 +68,6 @@ export class CoreNormalizer extends SpecMapper<NormalizerParams, FacetedUnitSpec
       ...(spec.name ? {name: [params.repeaterPrefix, spec.name].filter(n => n).join('_')} : {}),
       ...(encoding ? {encoding} : {})
     };
-
     if (parentEncoding || parentProjection) {
       return this.mapUnitWithParentEncodingOrProjection(specWithReplacedEncoding, params);
     }
@@ -212,6 +211,7 @@ export class CoreNormalizer extends SpecMapper<NormalizerParams, FacetedUnitSpec
 
     return super.mapFacet(spec, params);
   }
+  //
 
   private mapUnitWithParentEncodingOrProjection(
     spec: FacetedUnitSpec<Field>,
@@ -224,14 +224,21 @@ export class CoreNormalizer extends SpecMapper<NormalizerParams, FacetedUnitSpec
       parentEncoding,
       encoding: replaceRepeaterInEncoding(encoding, params.repeater)
     });
-
     return this.mapUnit(
       {
         ...spec,
         ...(mergedProjection ? {projection: mergedProjection} : {}),
         ...(mergedEncoding ? {encoding: mergedEncoding} : {})
       },
-      {config}
+      isEmpty(encoding ?? {}) && !isEmpty(params.repeater ?? {})
+        ? {
+            ...params,
+            config: config,
+            repeater: params.repeater
+          }
+        : {
+            config
+          }
     );
   }
 
