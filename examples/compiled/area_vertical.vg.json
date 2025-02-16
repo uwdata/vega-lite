@@ -116,9 +116,7 @@
       "orient": "left",
       "grid": false,
       "title": "Year (year)",
-      "format": {
-        "signal": "timeUnitSpecifier([\"year\"], {\"year-month\":\"%b %Y \",\"year-month-date\":\"%b %d, %Y \"})"
-      },
+      "format": {},
       "labelOverlap": true,
       "tickCount": {"signal": "ceil(height/40)"},
       "tickMinStep": {

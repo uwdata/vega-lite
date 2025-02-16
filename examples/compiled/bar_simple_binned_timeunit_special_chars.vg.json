@@ -145,9 +145,7 @@
       "orient": "left",
       "grid": false,
       "title": "a.b",
-      "format": {
-        "signal": "timeUnitSpecifier([\"year\",\"month\",\"date\"], {\"year-month\":\"%b %Y \",\"year-month-date\":\"%b %d, %Y \"})"
-      },
+      "format": {},
       "labelOverlap": true,
       "tickCount": {"signal": "ceil(height/40)"},
       "tickMinStep": {

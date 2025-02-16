@@ -338,12 +338,20 @@ export function fieldExpr(fullTimeUnit: TimeUnit, field: string, {end}: {end: bo
   return dateTimeExprToExpr(dateExpr);
 }
 
-export function timeUnitSpecifierExpression(timeUnit: TimeUnit) {
+export function timeUnitSpecifierExpression(timeUnit: TimeUnit, {isAxis}: {isAxis: boolean}): string {
   if (!timeUnit) {
     return undefined;
   }
 
   const timeUnitParts = getTimeUnitParts(timeUnit);
+  if (isAxis) {
+    if (timeUnitParts.includes('year') && !timeUnitParts.includes('week')) {
+      // If the timeUnit includes year (meaning it's a chronological timeUnit (aka datetime truncation),
+      // then the default axis format is actually pretty smart.
+      return undefined;
+    }
+  }
+
   return `timeUnitSpecifier(${stringify(timeUnitParts)}, ${stringify(VEGALITE_TIMEFORMAT)})`;
 }
 
@@ -355,7 +363,7 @@ export function formatExpression(timeUnit: TimeUnit, field: string, isUTCScale: 
     return undefined;
   }
 
-  const expr = timeUnitSpecifierExpression(timeUnit);
+  const expr = timeUnitSpecifierExpression(timeUnit, {isAxis: false});
 
   // We only use utcFormat for utc scale
   // For utc time units, the data is already converted as a part of timeUnit transform.

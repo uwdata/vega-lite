@@ -105,13 +105,13 @@ describe('Format', () => {
       });
     });
 
-    it('omits the timeFormat when omitTimeFormatConfig and no specifiedFormat', () => {
-      const formatted = timeFormat({config: {timeFormat: '%y'}, omitTimeFormatConfig: true});
+    it('omits the timeFormat when isAxis and no specifiedFormat', () => {
+      const formatted = timeFormat({config: {timeFormat: '%y'}, isAxis: true});
       expect(formatted).toBeUndefined();
     });
 
-    it('returns the timeFormat when !omitTimeFormatConfig and no specifiedFormat', () => {
-      const formatted = timeFormat({config: {timeFormat: '%y'}, omitTimeFormatConfig: false});
+    it('returns the timeFormat when !isAxis and no specifiedFormat', () => {
+      const formatted = timeFormat({config: {timeFormat: '%y'}, isAxis: false});
       expect(formatted).toBe('%y');
     });
   });

@@ -66,9 +66,7 @@
       "orient": "left",
       "grid": false,
       "title": "time",
-      "format": {
-        "signal": "timeUnitSpecifier([\"year\",\"month\",\"date\",\"hours\"], {\"year-month\":\"%b %Y \",\"year-month-date\":\"%b %d, %Y \"})"
-      },
+      "format": {},
       "formatType": "utc",
       "labelOverlap": true,
       "tickMinStep": {

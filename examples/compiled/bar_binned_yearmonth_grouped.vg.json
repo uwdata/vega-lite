@@ -133,9 +133,7 @@
       "orient": "bottom",
       "grid": false,
       "title": "date",
-      "format": {
-        "signal": "timeUnitSpecifier([\"year\",\"month\"], {\"year-month\":\"%b %Y \",\"year-month-date\":\"%b %d, %Y \"})"
-      },
+      "format": {},
       "labelFlush": true,
       "labelOverlap": true,
       "tickCount": {"signal": "ceil(width/40)"},

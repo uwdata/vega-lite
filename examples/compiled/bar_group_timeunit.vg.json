@@ -128,9 +128,7 @@
       "orient": "bottom",
       "grid": false,
       "title": "Year (year)",
-      "format": {
-        "signal": "timeUnitSpecifier([\"year\"], {\"year-month\":\"%b %Y \",\"year-month-date\":\"%b %d, %Y \"})"
-      },
+      "format": {},
       "labelFlush": true,
       "labelOverlap": true,
       "tickCount": {"signal": "ceil(width/40)"},
