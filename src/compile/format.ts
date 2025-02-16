@@ -96,14 +96,25 @@ export function formatSignalRef({
     }
   }
 
+  function getTimeDef(def: FieldDef<string> | DatumDef<string>) {
+    if (!isFieldDef(def)) {
+      return {
+        unit: undefined,
+        utc: undefined
+      };
+    }
+    return normalizeTimeUnit(def.timeUnit) || {};
+  }
+
   if (isFieldOrDatumDefForTimeFormat(fieldOrDatumDef)) {
+    const {unit: timeUnit, utc: isUTCUnit} = getTimeDef(fieldOrDatumDef);
     const signal = timeFormatExpression({
       field,
-      timeUnit: isFieldDef(fieldOrDatumDef) ? normalizeTimeUnit(fieldOrDatumDef.timeUnit)?.unit : undefined,
+      timeUnit,
       format,
       formatType: config.timeFormatType,
       rawTimeFormat: config.timeFormat,
-      isUTCScale: isScaleFieldDef(fieldOrDatumDef) && fieldOrDatumDef.scale?.type === ScaleType.UTC
+      isUTCScale: isUTCUnit || (isScaleFieldDef(fieldOrDatumDef) && fieldOrDatumDef.scale?.type === ScaleType.UTC)
     });
     return signal ? {signal} : undefined;
   }

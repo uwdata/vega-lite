@@ -70,6 +70,17 @@ describe('Format', () => {
       expect(expression).toBe(`utcFormat(datum["yearmonth_a"], "%Y")`);
     });
 
+    it('should get the right time expression for utcyearmonth', () => {
+      const fieldDef = {timeUnit: 'utcyearmonth', field: 'a', type: TEMPORAL} as const;
+      const expression = timeFormatExpression({
+        field: vgField(fieldDef, {expr: 'datum'}),
+        timeUnit: 'month',
+        format: '%Y',
+        isUTCScale: true
+      });
+      expect(expression).toBe(`utcFormat(datum["utcyearmonth_a"], '%Y')`);
+    });
+
     it('should get the right time expression for with a custom timeFormatType', () => {
       const fieldDef = {field: 'a', type: TEMPORAL} as const;
       const expression = timeFormatExpression({
@@ -157,6 +168,19 @@ describe('Format', () => {
   });
 
   describe('formatSignalRef()', () => {
+    it('should derive the correct temporal unit', () => {
+      expect(
+        formatSignalRef({
+          fieldOrDatumDef: {field: 'foo', type: TEMPORAL, timeUnit: 'utcdate'},
+          format: undefined,
+          formatType: undefined,
+          config: {}
+        })
+      ).toEqual({
+        signal:
+          'utcFormat(utcdate_foo, timeUnitSpecifier(["date"], {"year-month":"%b %Y ","year-month-date":"%b %d, %Y "}))'
+      });
+    });
     it('should format ordinal field defs if format is present', () => {
       expect(
         formatSignalRef({
