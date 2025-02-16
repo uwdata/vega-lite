@@ -54,7 +54,7 @@
     {
       "name": "projection",
       "size": {"signal": "[width, height]"},
-      "fit": {"signal": "[data('source_0'), data('world'), layer_2_geojson_0]"},
+      "fit": {"signal": "[data('source_0'), layer_2_geojson_0]"},
       "type": "orthographic",
       "rotate": {"signal": "[rotate0, rotate1, 0]"}
     }

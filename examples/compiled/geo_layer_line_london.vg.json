@@ -45,9 +45,7 @@
     {
       "name": "projection",
       "size": {"signal": "[width, height]"},
-      "fit": {
-        "signal": "[data('source_0'), layer_1_geojson_0, data('source_2')]"
-      }
+      "fit": {"signal": "[data('source_0'), layer_1_geojson_0]"}
     }
   ],
   "marks": [
