@@ -1,6 +1,11 @@
 import {array, hasOwnProperty, isBoolean} from 'vega-util';
 import {Aggregate, SUM_OPS} from './aggregate';
-import {getSecondaryRangeChannel, NonPositionChannel, NONPOSITION_CHANNELS, isPolarPositionChannel} from './channel';
+import {
+  getSecondaryRangeChannel,
+  NonPositionChannel,
+  NONPOSITION_CHANNELS
+  // isPolarPositionChannel
+} from './channel';
 import {
   channelDefType,
   FieldName,
@@ -179,10 +184,11 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
     const hasSameDimensionAndStackedField = dimensionField && dimensionField === stackedField;
 
     // For polar coordinates, do not set a groupBy when working with quantitative fields.
-    const isPolar = isPolarPositionChannel(fieldChannel) || isPolarPositionChannel(dimensionChannel);
-    const shouldAddPolarGroupBy = !isUnbinnedQuantitative(dimensionDef);
+    // const isPolar = isPolarPositionChannel(fieldChannel) || isPolarPositionChannel(dimensionChannel);
+    // const shouldAddPolarGroupBy = !isUnbinnedQuantitative(dimensionDef);
 
-    if (isPolar ? shouldAddPolarGroupBy : !hasSameDimensionAndStackedField) {
+    if (!hasSameDimensionAndStackedField) {
+      // if (isPolar ? shouldAddPolarGroupBy : !hasSameDimensionAndStackedField) {
       // avoid grouping by the stacked field
       groupbyChannels.push(dimensionChannel);
       groupbyFields.add(dimensionField);
