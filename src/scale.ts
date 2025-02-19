@@ -436,7 +436,7 @@ export interface ScaleConfig<ES extends ExprRef | SignalRef> extends ScaleInvali
   zero?: boolean;
 
   /**
-   * Default framerate (frames per second) for time [`band`](https://vega.github.io/vega-lite/docs/scale.html#band) scales.
+   * Default framerate (frames per second) for [`time`](https://vega.github.io/vega-lite/docs/encoding.html#time) encoding animation [`band`](https://vega.github.io/vega-lite/docs/scale.html#band) scales.
    *
    * __Default value:__ `2`
    *
@@ -444,7 +444,7 @@ export interface ScaleConfig<ES extends ExprRef | SignalRef> extends ScaleInvali
   framesPerSecond?: number;
 
   /**
-   * Default animation duration (in seconds) for time encodings, except for [`band`](https://vega.github.io/vega-lite/docs/scale.html#band) scales.
+   * Default animation duration (in seconds) for [`time`](https://vega.github.io/vega-lite/docs/encoding.html#time) encodings (except for [`band`](https://vega.github.io/vega-lite/docs/scale.html#band) scales, which use `framesPerSecond` instead).
    *
    * __Default value:__ `5`
    *

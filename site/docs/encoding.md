@@ -84,6 +84,7 @@ The keys in the `encoding` object are encoding channels. Vega-Lite supports the 
 - [Position Offset Channels](#position-offset): `xOffset`, `yOffset`
 - [Polar Position Channels](#polar): `theta`, `theta2`, `radius`, `radius2`
 - [Geographic Position Channels](#geo): `longitude`, `latitude`, `longitude2`, `latitude2`
+- [Time Channel](#time): `time`
 - [Mark Property Channels](#mark-prop): `angle`, `color` (and `fill` / `stroke`), `opacity`, `fillOpacity`, `strokeOpacity`, `shape`, `size`, `strokeDash`, `strokeWidth`
 - [Text and Tooltip Channels](#text): `text`, `tooltip`
 - [Hyperlink Channel](#href): `href`
@@ -260,6 +261,36 @@ Polar field and datum definitions may include `scale`, `stack`, and `sort` prope
 {% include table.html props="longitude,latitude,longitude2,latitude2" source="Encoding" %}
 
 See [an example that uses `longitude` and `latitude` channels in a map]({{ site.baseurl }}/examples/geo_circle.html) or [another example that draws line segments (`rule`s) between points in a map]({{ site.baseurl }}/examples/geo_rule.html).
+
+{:#time}
+
+## Time Channel
+
+The `time` channel maps data values to animation keyframes over time. When a time encoding is specified, together with a [selection parameter](selection.html) that has a `timer` [event stream](selection.html#on), marks are animated to show different data values as time progresses.
+
+See [an example scatterplot animation]({{ site.baseurl }}/examples/animated_gapminder.html) that uses the `time` channel and a `timer` selection parameter.
+
+{% include table.html props="time" source="Encoding" %}
+
+Note: `time` encoding animations currently have a few restrictions. See the [example gallery]({{ site.baseurl }}/examples/#animated) for examples of animated visualizations.
+
+- must also explicility specify a selection parameter
+  - parameter must have a `timer` event
+  - parameter must select the same field as the `time` field definition
+- must explicitliy define a filter using that parameter
+- currently, the `time` channel only supports `band` scales (these are the default for discrete frame animation)
+- currently, only unit specifications are supported (no multi-view animations)
+
+<!--
+TODO(jzong): uncomment once we've added rescale, scale types
+
+{:#time-field-def}
+
+### Time Field Definition
+
+In addition to the general [field definition properties](#field-def), the `time` field definition may include the properties listed below.
+
+{% include table.html props="scale,rescale,sort" source="TimeFieldDef" %} -->
 
 {:#mark-prop}
 
@@ -438,3 +469,7 @@ In addition to the constant `value`, [value definitions](#value-def) of the `ord
 {% include table.html props="facet,row,column" source="FacetedEncoding" %}
 
 For more information, read the [facet documentation](facet.html).
+
+```
+
+```

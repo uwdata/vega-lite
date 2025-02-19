@@ -5095,7 +5095,8 @@
           "description": "The end angle of arc marks in radians. A value of 0 indicates up or “north”, increasing values proceed clockwise."
         },
         "time": {
-          "$ref": "#/definitions/TimeDef"
+          "$ref": "#/definitions/TimeDef",
+          "description": "Time position of animated marks."
         },
         "tooltip": {
           "anyOf": [
@@ -9223,7 +9224,8 @@
           "description": "The end angle of arc marks in radians. A value of 0 indicates up or “north”, increasing values proceed clockwise."
         },
         "time": {
-          "$ref": "#/definitions/TimeDef"
+          "$ref": "#/definitions/TimeDef",
+          "description": "Time position of animated marks."
         },
         "tooltip": {
           "anyOf": [
@@ -22019,7 +22021,7 @@
       "additionalProperties": false,
       "properties": {
         "animationDuration": {
-          "description": "Default animation duration (in seconds) for time encodings, except for [`band`](https://vega.github.io/vega-lite/docs/scale.html#band) scales.\n\n__Default value:__ `5`",
+          "description": "Default animation duration (in seconds) for [`time`](https://vega.github.io/vega-lite/docs/encoding.html#time) encodings (except for [`band`](https://vega.github.io/vega-lite/docs/scale.html#band) scales, which use `framesPerSecond` instead).\n\n__Default value:__ `5`",
           "type": "number"
         },
         "bandPaddingInner": {
@@ -22111,7 +22113,7 @@
           "minimum": 0
         },
         "framesPerSecond": {
-          "description": "Default framerate (frames per second) for time [`band`](https://vega.github.io/vega-lite/docs/scale.html#band) scales.\n\n__Default value:__ `2`",
+          "description": "Default framerate (frames per second) for [`time`](https://vega.github.io/vega-lite/docs/encoding.html#time) encoding animation [`band`](https://vega.github.io/vega-lite/docs/scale.html#band) scales.\n\n__Default value:__ `2`",
           "type": "number"
         },
         "invalid": {

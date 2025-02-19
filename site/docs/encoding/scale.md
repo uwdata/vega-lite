@@ -458,6 +458,13 @@ To provide themes for all scales, the scale config (`config: {scale: {...}}`) ca
 
 {% include table.html props="invalid" source="ScaleConfig" %}
 
+#### Animation
+
+<!-- TODO(jzong): uncomment animationDuration when linear scales for animation are implemented -->
+<!-- {% include table.html props="animationDuration,framesPerSecond" source="ScaleConfig" %} -->
+
+{% include table.html props="framesPerSecond" source="ScaleConfig" %}
+
 #### Other
 
 {% include table.html props="clamp,round,xReverse,useUnaggregatedDomain,zero" source="ScaleConfig" %}

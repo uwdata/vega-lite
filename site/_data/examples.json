@@ -955,5 +955,19 @@
         "png": true
       }
     ]
+  },
+  "Animated": {
+    "": [
+      {
+        "name": "animated_gapminder",
+        "title": "Gapminder Frame Animation",
+        "description": "An animated scatterplot showing the relationship between fertility rates and life expectancy across different countries, based on Gapminder data. Each point represents a country, with points colored by country and the visualization updating over time to show how these metrics have changed across years."
+      },
+      {
+        "name": "animated_hop",
+        "title": "Hypothetical outcome plot",
+        "description": "An animated tick chart displaying precipitation measurements from Seattle weather data. Each horizontal tick mark represents a precipitation value for a specific date, with the visualization updating over time to show the temporal progression of rainfall patterns."
+      }
+    ]
   }
 }

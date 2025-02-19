@@ -187,6 +187,9 @@ export interface Encoding<F extends Field> {
    */
   radius2?: Position2Def<F>;
 
+  /**
+   * Time position of animated marks.
+   */
   time?: TimeDef<F>;
 
   /**

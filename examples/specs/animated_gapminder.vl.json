@@ -25,7 +25,8 @@
   ],
   "encoding": {
     "color": {
-      "field": "country"
+      "field": "country",
+      "legend": null
     },
     "x": {
       "field": "fertility",
