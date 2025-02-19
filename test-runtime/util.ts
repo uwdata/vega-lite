@@ -326,7 +326,6 @@ export function clearRegion(idx: number | {
 }
 
 export function multiviewRegion(key: keyof typeof hits.region, idx: number, parent?: string, targetBrush?: boolean) {
-  // TODO: region clearing will need to support object intake
   return key.match('_clear')
     ? clearRegion(hits.region[key][idx], parent, targetBrush)
     : circleRegion(hits.region[key][idx], parent, targetBrush, 10);
