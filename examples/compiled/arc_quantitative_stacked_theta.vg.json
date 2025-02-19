@@ -20,7 +20,7 @@
       "transform": [
         {
           "type": "stack",
-          "groupby": [],
+          "groupby": ["value"],
           "field": "segment",
           "sort": {"field": [], "order": []},
           "as": ["segment_start", "segment_end"],

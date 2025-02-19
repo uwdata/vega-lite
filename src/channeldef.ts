@@ -867,6 +867,29 @@ export function vgField(
   }
 }
 
+/**
+ * Return true if fieldDefs are equal in field name and all "fn" opt.nofn related properties
+ * Different from checking for full field def equivalence, since some (like axis) don't matter for positioning purposes.
+ */
+export function areFieldDefsWithInlineTransformsEquivalent(
+  fieldDef1: FieldDef<string> | WindowFieldDef | AggregatedFieldDef,
+  fieldDef2: FieldDef<string> | WindowFieldDef | AggregatedFieldDef
+) {
+  if (isOpFieldDef(fieldDef1) || isOpFieldDef(fieldDef2)) {
+    return isOpFieldDef(fieldDef1) && isOpFieldDef(fieldDef2) && fieldDef1.op === fieldDef2.op;
+  }
+
+  const {field: field1, aggregate: aggregate1, bin: bin1, timeUnit: timeUnit1} = fieldDef1;
+  const {field: field2, aggregate: aggregate2, bin: bin2, timeUnit: timeUnit2} = fieldDef2;
+
+  return (
+    field1 === field2 &&
+    JSON.stringify(aggregate1) === JSON.stringify(aggregate2) &&
+    JSON.stringify(bin1) === JSON.stringify(bin2) &&
+    timeUnit1 === timeUnit2
+  );
+}
+
 export function isDiscrete(def: TypedFieldDef<Field> | DatumDef<any, any>) {
   switch (def.type) {
     case 'nominal':
