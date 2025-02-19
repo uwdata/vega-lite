@@ -1,6 +1,6 @@
 import {array, hasOwnProperty, isBoolean} from 'vega-util';
 import {Aggregate, SUM_OPS} from './aggregate';
-import {getSecondaryRangeChannel, NonPositionChannel, NONPOSITION_CHANNELS} from './channel';
+import {getSecondaryRangeChannel, NonPositionChannel, NONPOSITION_CHANNELS, isPolarPositionChannel} from './channel';
 import {
   channelDefType,
   FieldName,
@@ -176,8 +176,13 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
   if (encoding[dimensionChannel]) {
     const dimensionDef = encoding[dimensionChannel];
     const dimensionField = isFieldDef(dimensionDef) ? vgField(dimensionDef, {}) : undefined;
+    const hasSameDimensionAndStackedField = dimensionField && dimensionField === stackedField;
 
-    if (dimensionField && dimensionField !== stackedField) {
+    // For polar coordinates, do not set a groupBy when working with quantitative fields.
+    const isPolar = isPolarPositionChannel(fieldChannel) || isPolarPositionChannel(dimensionChannel);
+    const shouldAddPolarGroupBy = !isUnbinnedQuantitative(dimensionDef);
+
+    if (isPolar ? shouldAddPolarGroupBy : !hasSameDimensionAndStackedField) {
       // avoid grouping by the stacked field
       groupbyChannels.push(dimensionChannel);
       groupbyFields.add(dimensionField);
@@ -237,7 +242,6 @@ export function stack(m: Mark | MarkDef, encoding: Encoding<string>): StackPrope
   if (!offset || !isStackOffset(offset)) {
     return null;
   }
-
   if (isAggregate(encoding) && stackBy.length === 0) {
     return null;
   }
