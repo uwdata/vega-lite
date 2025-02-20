@@ -50,11 +50,29 @@ describe('Axis', () => {
             type: 'quantitative'
           }
         },
-        config: {axisQuantitative: {labelAlign: 'right'}}
+        config: {axisQuantitative: {labelAlign: 'right'}, axisX: {title: 'foo'}}
       });
       const axisComponent = parseUnitAxes(model);
       expect(axisComponent['x']).toHaveLength(1);
       expect(axisComponent['x'][0].implicit.labelAlign).toBe('right');
+      expect(axisComponent['x'][0].implicit.title).toBe('foo');
+    });
+
+    it('should override axis title set in config with title from encoding', () => {
+      const model = parseUnitModelWithScale({
+        mark: 'point',
+        encoding: {
+          x: {
+            field: 'a',
+            title: 'foo',
+            type: 'quantitative'
+          }
+        },
+        config: {axisX: {title: 'bar'}}
+      });
+      const axisComponent = parseUnitAxes(model);
+      expect(axisComponent['x']).toHaveLength(1);
+      expect(axisComponent['x'][0].explicit.title).toBe('foo');
     });
 
     it('should produce grid, orient, tickCount, labelExpr in the component when axis config is specified.', () => {

@@ -16,7 +16,7 @@ import type {
 import {ConditionalPredicate, Value, ValueDef} from './channeldef';
 import {DateTime} from './datetime';
 import {ExprRef} from './expr';
-import {Guide, GuideEncodingEntry, TitleMixins, VlOnlyGuideConfig} from './guide';
+import {Guide, GuideEncodingEntry, TitleMixins} from './guide';
 import {Flag, keys} from './util';
 import {MapExcludeValueRefAndReplaceSignalWith, VgEncodeChannel} from './vega.schema';
 import {hasOwnProperty} from 'vega-util';
@@ -337,7 +337,7 @@ export interface AxisPropsWithCondition<ES extends ExprRef | SignalRef> {
 }
 
 export type AxisConfig<ES extends ExprRef | SignalRef> = Guide &
-  VlOnlyGuideConfig &
+  TitleMixins &
   AxisConfigBaseWithConditionalAndSignal<ES> & {
     /**
      * Disable axis by default.

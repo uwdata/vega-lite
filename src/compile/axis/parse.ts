@@ -214,7 +214,8 @@ const propsToAlwaysIncludeConfig = new Set([
   'labelExpr',
   'tickCount',
   'position',
-  'tickMinStep'
+  'tickMinStep',
+  'title'
 ]);
 
 function parseAxis(channel: PositionScaleChannel, model: UnitModel): AxisComponent {
