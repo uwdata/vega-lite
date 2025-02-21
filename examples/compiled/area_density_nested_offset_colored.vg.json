@@ -1,0 +1,162 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 400,
+  "height": 80,
+  "title": {"text": "Distribution of Body Mass of Penguins", "frame": "group"},
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_0",
+      "url": "data/penguins.json",
+      "format": {"type": "json"},
+      "transform": [
+        {
+          "type": "kde",
+          "field": "Body Mass (g)",
+          "groupby": ["Species"],
+          "extent": [2500, 6500],
+          "as": ["value", "density"],
+          "resolve": "shared"
+        },
+        {
+          "type": "impute",
+          "field": "value",
+          "groupby": [],
+          "key": "Species",
+          "method": "value",
+          "value": 0
+        },
+        {
+          "type": "impute",
+          "field": "value",
+          "groupby": [],
+          "key": "density",
+          "method": "value",
+          "value": 0
+        },
+        {
+          "type": "stack",
+          "groupby": ["Species", "density"],
+          "field": "value",
+          "sort": {"field": [], "order": []},
+          "as": ["value_start", "value_end"],
+          "offset": "zero"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "pathgroup",
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "faceted_path_main",
+          "data": "source_0",
+          "groupby": ["Species"]
+        }
+      },
+      "encode": {
+        "update": {
+          "width": {"field": {"group": "width"}},
+          "height": {"field": {"group": "height"}}
+        }
+      },
+      "marks": [
+        {
+          "name": "marks",
+          "type": "area",
+          "style": ["area"],
+          "sort": {"field": "datum[\"value\"]"},
+          "from": {"data": "faceted_path_main"},
+          "encode": {
+            "update": {
+              "orient": {"value": "vertical"},
+              "fill": {"scale": "color", "field": "Species"},
+              "description": {
+                "signal": "\"Body Mass (g): \" + (format(datum[\"value\"], \"\")) + \"; Species: \" + (isValid(datum[\"Species\"]) ? datum[\"Species\"] : \"\"+datum[\"Species\"]) + \"; density: \" + (format(datum[\"density\"], \"\"))"
+              },
+              "x": {"scale": "x", "field": "value_end"},
+              "y": {
+                "scale": "y",
+                "field": "Species",
+                "offset": {"scale": "yOffset", "field": "density"}
+              },
+              "y2": {"scale": "y", "value": 0},
+              "defined": {
+                "signal": "isValid(datum[\"value\"]) && isFinite(+datum[\"value\"])"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": {"data": "source_0", "fields": ["value_start", "value_end"]},
+      "range": [0, {"signal": "width"}],
+      "nice": true,
+      "zero": false
+    },
+    {
+      "name": "y",
+      "type": "band",
+      "domain": {"data": "source_0", "field": "Species", "sort": true},
+      "range": [0, {"signal": "height"}],
+      "paddingInner": 0.2,
+      "paddingOuter": 0.2
+    },
+    {
+      "name": "yOffset",
+      "type": "linear",
+      "domain": {"data": "source_0", "field": "density"},
+      "range": [0, {"signal": "bandwidth('y')"}],
+      "zero": false
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "source_0", "field": "Species", "sort": true},
+      "range": "category"
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "gridScale": "y",
+      "grid": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Body Mass (g)",
+      "labelFlush": true,
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "Species",
+      "zindex": 0
+    }
+  ],
+  "legends": [{"fill": "color", "symbolType": "circle", "title": "Species"}]
+}
