@@ -172,6 +172,48 @@ describe('compile/compile', () => {
     }),
   );
 
+  it(
+    'should NOT drop fit-x in top-level properties for fit-x chart with specified width',
+    log.wrap(localLogger => {
+      const {spec} = compile({
+        data: {
+          values: [{x: 'foo', y: 1}]
+        },
+        width: 400,
+        autosize: 'fit-x',
+        mark: 'point',
+        encoding: {
+          x: {field: 'x', type: 'nominal'},
+          y: {field: 'y', type: 'quantitative'}
+        }
+      });
+
+      expect(localLogger.warns).toHaveLength(0);
+      expect(spec.autosize).toBe('fit-x');
+    })
+  );
+
+  it(
+    'should NOT drop fit-y in top-level properties for fit-y chart with specified height',
+    log.wrap(localLogger => {
+      const {spec} = compile({
+        data: {
+          values: [{x: 'foo', y: 1}]
+        },
+        height: 400,
+        autosize: 'fit-y',
+        mark: 'point',
+        encoding: {
+          x: {field: 'x', type: 'nominal'},
+          y: {field: 'y', type: 'quantitative'}
+        }
+      });
+
+      expect(localLogger.warns).toHaveLength(0);
+      expect(spec.autosize).toBe('fit-y');
+    })
+  );
+
   it('should use size signal for bar chart width', () => {
     const {spec} = compile({
       data: {values: [{a: 'A', b: 28}]},
