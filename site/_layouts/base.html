@@ -7,11 +7,16 @@
 
     <link rel="shortcut icon" href="https://vega.github.io/favicon.ico" />
 
-    {% seo %}
-
+    {% if site.is_docset_build == true %}
+    <script>
+      // Docset doesn't serve JSON from a fileserver, so it needs to load data from github
+      const BASEURL = 'https://vega.github.io/vega-lite/';
+    </script>
+    {% else %} {% seo %}
     <script>
       const BASEURL = window.location.origin + '{{site.baseurl}}';
     </script>
+    {% endif %}
 
     <link rel="stylesheet" href="{{ site.baseurl }}/static/github.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/octicons@4.4.0/build/font/octicons.min.css" />

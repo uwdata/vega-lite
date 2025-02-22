@@ -12,6 +12,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - static/*.ts
+is_docset_build: false # Control behaviors that make it easier to replace absolute with relative paths for offline friendly builds. False for deploying to the public docs.
 
 markdown: kramdown
 highlighter: none

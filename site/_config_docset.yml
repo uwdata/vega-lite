@@ -1,0 +1,35 @@
+# Config for building a docset
+# For usage: https://github.com/hydrosquall/vega-lite-docset-generator
+
+title: Vega-Lite
+description: N/A
+
+# Alternative: Rewrite the paths to relative URLs locally
+# None of these worked when simply applied to base.html, so I ended up transforming
+# the base URL in my python script instead. Leaving notes in here for posterity.
+# https://ricostacruz.com/til/relative-paths-in-jekyll
+# https://gist.github.com/Ketrel/1f36fca6b4148f7263b3ee8fdb0923e7
+# https://github.com/jekyll/jekyll/issues/6360
+
+baseurl: 'DOCSET_BASE_TO_REPLACE' # the subpath of your site, e.g. /blog/
+url: 'https://vega.github.io' # the base hostname & protocol for your site
+is_docset_build: true
+twitter:
+  username: vega_vis
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - static/*.ts
+
+markdown: kramdown
+highlighter: none
+
+kramdown:
+  input: GFM
+  auto_id_stripping: true
+  syntax_highlighter_opts:
+    disable: true
+
+plugins:
+  - jekyll-mentions
+  - jekyll-redirect-from

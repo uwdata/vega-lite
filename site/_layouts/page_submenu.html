@@ -25,7 +25,7 @@ layout: plain
       <br>
       {% else %}
       <li class="sidebar-nav-item"><a {% if link.url == url %}aria-current="page"{% endif %}
-          href="{{site.baseurl}}{{layout.base}}{% if link.url != 'index' %}{{link.url}}.html{% endif %}" title="{{link.title}}">{{link.text}}
+          href="{{site.baseurl}}{{layout.base}}{{link.url}}.html" title="{{link.title}}">{{link.text}}
       </a></li>
       {% if link.sub-sidebar %}
       <ul class="sub-sub-nav">
