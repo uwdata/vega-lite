@@ -1,0 +1,143 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Faceting folded column data (this could also be done using `repeat` without the transform fold.",
+  "background": "white",
+  "padding": 5,
+  "data": [
+    {
+      "name": "source_1",
+      "url": "https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/population_engineers_hurricanes.csv",
+      "format": {"type": "csv"}
+    },
+    {
+      "name": "source_0",
+      "url": "https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/us-10m.json",
+      "format": {"feature": "states", "type": "topojson"},
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "source_1",
+          "key": "id",
+          "fields": ["id"],
+          "values": ["population", "engineers", "hurricanes"]
+        },
+        {
+          "type": "fold",
+          "fields": ["population", "engineers", "hurricanes"],
+          "as": ["key", "value"]
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"value\"]) && isFinite(+datum[\"value\"])"
+        }
+      ]
+    },
+    {
+      "name": "row_domain",
+      "source": "source_0",
+      "transform": [{"type": "aggregate", "groupby": ["key"]}]
+    }
+  ],
+  "projections": [
+    {
+      "name": "projection",
+      "size": {"signal": "[child_width, child_height]"},
+      "fit": {"signal": "data('source_0')"},
+      "type": "albersUsa"
+    }
+  ],
+  "signals": [
+    {"name": "child_width", "value": 200},
+    {"name": "child_height", "value": 100}
+  ],
+  "layout": {
+    "padding": 20,
+    "offset": {"rowTitle": 10},
+    "columns": 1,
+    "bounds": "full",
+    "align": "all"
+  },
+  "marks": [
+    {
+      "name": "row-title",
+      "type": "group",
+      "role": "row-title",
+      "title": {
+        "text": "key",
+        "orient": "left",
+        "style": "guide-title",
+        "offset": 10
+      }
+    },
+    {
+      "name": "row_header",
+      "type": "group",
+      "role": "row-header",
+      "from": {"data": "row_domain"},
+      "sort": {"field": "datum[\"key\"]", "order": "ascending"},
+      "title": {
+        "text": {
+          "signal": "isValid(parent[\"key\"]) ? parent[\"key\"] : \"\"+parent[\"key\"]"
+        },
+        "orient": "left",
+        "style": "guide-label",
+        "frame": "group",
+        "offset": 10
+      },
+      "encode": {"update": {"height": {"signal": "child_height"}}}
+    },
+    {
+      "name": "cell",
+      "type": "group",
+      "style": "view",
+      "from": {
+        "facet": {"name": "facet", "data": "source_0", "groupby": ["key"]}
+      },
+      "sort": {"field": ["datum[\"key\"]"], "order": ["ascending"]},
+      "encode": {
+        "update": {
+          "width": {"signal": "child_width"},
+          "height": {"signal": "child_height"}
+        }
+      },
+      "marks": [
+        {
+          "name": "child_marks",
+          "type": "shape",
+          "style": ["geoshape"],
+          "from": {"data": "facet"},
+          "encode": {
+            "update": {
+              "tooltip": {
+                "signal": "{\"value\": format(datum[\"value\"], \"\")}"
+              },
+              "fill": {"scale": "child_color", "field": "value"},
+              "ariaRoleDescription": {"value": "geoshape"},
+              "description": {
+                "signal": "\"value: \" + (format(datum[\"value\"], \"\"))"
+              }
+            }
+          },
+          "transform": [{"type": "geoshape", "projection": "projection"}]
+        }
+      ],
+      "scales": [
+        {
+          "name": "child_color",
+          "type": "linear",
+          "domain": {"data": "facet", "field": "value"},
+          "range": "heatmap",
+          "interpolate": "hcl",
+          "zero": false
+        }
+      ],
+      "legends": [
+        {
+          "fill": "child_color",
+          "gradientLength": {"signal": "clamp(child_height, 64, 200)"},
+          "title": "value"
+        }
+      ]
+    }
+  ]
+}

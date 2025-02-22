@@ -1,0 +1,29 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Faceting folded column data (this could also be done using `repeat` without the transform fold.",
+  "data": {
+    "url": "https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/us-10m.json",
+    "format": {"feature": "states", "type": "topojson"}
+  },
+  "facet": {"row": {"field": "key", "type": "nominal"}},
+  "spec": {
+    "mark": {"type": "geoshape", "tooltip": true},
+    "encoding": {"color": {"field": "value", "type": "quantitative"}},
+    "height": 100,
+    "projection": {"type": "albersUsa"},
+    "transform": [
+      {
+        "lookup": "id",
+        "from": {
+          "data": {
+            "url": "https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/population_engineers_hurricanes.csv"
+          },
+          "key": "id",
+          "fields": ["population", "engineers", "hurricanes"]
+        }
+      },
+      {"fold": ["population", "engineers", "hurricanes"]}
+    ]
+  },
+  "resolve": {"scale": {"color": "independent"}}
+}

@@ -44,7 +44,9 @@ export function assembleProjectionForModel(model: Model): VgProjection[] {
     };
 
     const fits: string[] = component.data.reduce((sources, data) => {
-      const source: string = isSignalRef(data) ? data.signal : `data('${model.lookupDataSource(data)}')`;
+      const source: string = isSignalRef(data)
+        ? data.signal
+        : `data('${model.lookupDataSource(model.component.data.sources[0].dataName)}')`;
       if (!contains(sources, source)) {
         // build a unique list of sources
         sources.push(source);

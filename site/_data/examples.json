@@ -765,7 +765,12 @@
       {
         "name": "geo_repeat",
         "png": true,
-        "title": "Three Choropleths Representing Disjoint Data from the Same Table"
+        "title": "Three Repeated Choropleths"
+      },
+      {
+        "name": "geo_facet",
+        "png": true,
+        "title": "Three Faceted Choropleths"
       },
       {
         "name": "geo_text",
