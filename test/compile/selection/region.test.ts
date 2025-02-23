@@ -10,14 +10,14 @@ describe('Multi Selection', () => {
     encoding: {
       x: {field: 'Horsepower', type: 'quantitative'},
       y: {field: 'Miles_per_Gallon', type: 'quantitative', bin: true},
-      color: {field: 'Origin', type: 'nominal'}
-    }
+      color: {field: 'Origin', type: 'nominal'},
+    },
   });
 
   const selCmpts2 = (model.component.selection = parseUnitSelection(model, [
     {
       name: 'one',
-      select: 'region'
+      select: 'region',
     },
     {
       name: 'two',
@@ -28,10 +28,10 @@ describe('Multi Selection', () => {
           fillOpacity: 0.75,
           stroke: 'black',
           strokeWidth: 4,
-          strokeDash: [10, 5]
-        }
-      }
-    }
+          strokeDash: [10, 5],
+        },
+      },
+    },
   ]));
 
   it('builds tuple signals', () => {
@@ -44,9 +44,9 @@ describe('Multi Selection', () => {
           on: [
             {
               events: [{signal: 'one_screen_path'}],
-              update: 'vlSelectionTuples(intersectLasso("marks", one_screen_path, unit), {unit: ""})'
-            }
-          ]
+              update: 'vlSelectionTuples(intersectLasso("marks", one_screen_path, unit), {unit: ""})',
+            },
+          ],
         },
         {
           name: 'one_screen_path',
@@ -54,15 +54,15 @@ describe('Multi Selection', () => {
           on: [
             {
               events: parseSelector('mousedown', 'scope')[0],
-              update: '[[x(unit), y(unit)]]'
+              update: '[[x(unit), y(unit)]]',
             },
             {
               events: parseSelector('[mousedown, window:mouseup] > window:mousemove!', 'scope')[0],
-              update: 'lassoAppend(one_screen_path, clamp(x(unit), 0, width), clamp(y(unit), 0, height))'
-            }
-          ]
-        }
-      ])
+              update: 'lassoAppend(one_screen_path, clamp(x(unit), 0, width), clamp(y(unit), 0, height))',
+            },
+          ],
+        },
+      ]),
     );
   });
 
@@ -76,11 +76,11 @@ describe('Multi Selection', () => {
           on: [
             {
               events: {signal: 'one_tuple'},
-              update: `modify("one_store", one_tuple, true)`
-            }
-          ]
-        }
-      ])
+              update: `modify("one_store", one_tuple, true)`,
+            },
+          ],
+        },
+      ]),
     );
   });
 
@@ -97,19 +97,19 @@ describe('Multi Selection', () => {
             fillOpacity: {value: 0.75},
             stroke: {value: 'black'},
             strokeWidth: {value: 4},
-            strokeDash: {value: [10, 5]}
+            strokeDash: {value: [10, 5]},
           },
           update: {
             path: [
               {
                 test: 'data("two_store").length && data("two_store")[0].unit === ""',
-                signal: 'lassoPath(two_screen_path)'
+                signal: 'lassoPath(two_screen_path)',
               },
-              {value: '[]'}
-            ]
-          }
-        }
-      }
+              {value: '[]'},
+            ],
+          },
+        },
+      },
     ]);
   });
 });

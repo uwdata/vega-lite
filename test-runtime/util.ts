@@ -99,13 +99,13 @@ export const hits = {
       [2, 8],
       [4, 10],
     ],
-    facet_clear: [[3], [5], [7]]
+    facet_clear: [[3], [5], [7]],
   } as const,
   region: {
     circle: [
       {id: 14, count: 5},
       {id: 3, count: 2},
-      {id: 6, count: 4}
+      {id: 6, count: 4},
     ],
     circle_clear: [{id: 14}],
 
@@ -116,9 +116,9 @@ export const hits = {
           [-30, -30],
           [-30, 30],
           [30, 30],
-          [30, -30]
+          [30, -30],
         ],
-        count: 4
+        count: 4,
       },
       {
         id: 14,
@@ -130,18 +130,18 @@ export const hits = {
           [15, -15],
           [15, 30],
           [30, 30],
-          [30, -30]
+          [30, -30],
         ],
-        count: 2
-      }
+        count: 2,
+      },
     ],
 
     facet: [2, 4, 7],
     facet_clear: [3, 5, 8],
 
     repeat: [5, 10, 16],
-    repeat_clear: [13, 14, 2]
-  }
+    repeat_clear: [13, 14, 2],
+  },
 };
 
 const config = {
@@ -299,14 +299,23 @@ export function region(id: number, parent?: string, targetBrush?: boolean) {
   return `circleRegion(${stringValue(parent)}, ${!!targetBrush}, ${id})`;
 }
 
-export function circleRegion(idx: number | {
-  id: number;
-  count?: number;
-} | {
-  id: number;
-  coords: number[][];
-  count: number;
-}, parent?: string, targetBrush?: boolean, radius = 40, segments = 20) {
+export function circleRegion(
+  idx:
+    | number
+    | {
+        id: number;
+        count?: number;
+      }
+    | {
+        id: number;
+        coords: number[][];
+        count: number;
+      },
+  parent?: string,
+  targetBrush?: boolean,
+  radius = 40,
+  segments = 20,
+) {
   return `circleRegion(${idx}, ${radius}, ${segments}, ${stringValue(parent)}, ${!!targetBrush})`;
 }
 
@@ -314,14 +323,21 @@ export function polygonRegion(idx: number, polygon: number[][], parent?: string,
   return `polygonRegion(${idx}, ${JSON.stringify(polygon)}, ${stringValue(parent)}, ${!!targetBrush})`;
 }
 
-export function clearRegion(idx: number | {
-  id: number;
-  count?: number;
-} | {
-  id: number;
-  coords: number[][];
-  count: number;
-}, parent?: string, targetBrush?: boolean) {
+export function clearRegion(
+  idx:
+    | number
+    | {
+        id: number;
+        count?: number;
+      }
+    | {
+        id: number;
+        coords: number[][];
+        count: number;
+      },
+  parent?: string,
+  targetBrush?: boolean,
+) {
   return `clear(${idx}, ${stringValue(parent)}, ${!!targetBrush})`;
 }
 
@@ -465,7 +481,6 @@ export async function zoom(view: View, id: number, delta: number, parent: string
   });
   return (await view.runAsync()).data('sel_store');
 }
-
 
 export function getState(signals: string[], data: string[]) {
   return `getState(${JSON.stringify(signals)}, ${JSON.stringify(data)})`;

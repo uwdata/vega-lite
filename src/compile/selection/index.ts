@@ -30,7 +30,6 @@ import zoom from './zoom.js';
 import {ParameterName} from '../../parameter.js';
 import region from './region.js';
 
-
 export const STORE = '_store';
 export const TUPLE = '_tuple';
 export const MODIFY = '_modify';

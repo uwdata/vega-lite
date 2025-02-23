@@ -222,14 +222,14 @@ export interface SelectionParameter<T extends SelectionType = SelectionType> {
    * - `"interval"` -- to select a continuous range of data values on `drag`.
    */
   select:
-  | T
-  | (T extends 'point'
-    ? PointSelectionConfig
-    : T extends 'interval'
-    ? IntervalSelectionConfig
-    : T extends 'region'
-    ? RegionSelectionConfig
-    : never);
+    | T
+    | (T extends 'point'
+        ? PointSelectionConfig
+        : T extends 'interval'
+          ? IntervalSelectionConfig
+          : T extends 'region'
+            ? RegionSelectionConfig
+            : never);
 
   /**
    * Initialize the selection with a mapping between [projected channels or field names](https://vega.github.io/vega-lite/docs/selection.html#project) and initial values.
@@ -237,10 +237,10 @@ export interface SelectionParameter<T extends SelectionType = SelectionType> {
    * __See also:__ [`init`](https://vega.github.io/vega-lite/docs/value.html) documentation.
    */
   value?: T extends 'point'
-  ? SelectionInit | SelectionInitMapping[]
-  : T extends 'interval'
-  ? SelectionInitIntervalMapping
-  : never;
+    ? SelectionInit | SelectionInitMapping[]
+    : T extends 'interval'
+      ? SelectionInitIntervalMapping
+      : never;
 
   /**
    * When set, a selection is populated by input elements (also known as dynamic query widgets)
@@ -255,10 +255,10 @@ export interface SelectionParameter<T extends SelectionType = SelectionType> {
    * __See also:__ [`bind`](https://vega.github.io/vega-lite/docs/bind.html) documentation.
    */
   bind?: T extends 'point'
-  ? Binding | Record<string, Binding> | LegendBinding
-  : T extends 'interval'
-  ? 'scales'
-  : never;
+    ? Binding | Record<string, Binding> | LegendBinding
+    : T extends 'interval'
+      ? 'scales'
+      : never;
 }
 
 export type TopLevelSelectionParameter = SelectionParameter & {
@@ -271,29 +271,29 @@ export type TopLevelSelectionParameter = SelectionParameter & {
 
 export type ParameterExtent =
   | {
-    /**
-     * The name of a parameter.
-     */
-    param: ParameterName;
+      /**
+       * The name of a parameter.
+       */
+      param: ParameterName;
 
-    /**
-     * If a selection parameter is specified, the field name to extract selected values for
-     * when the selection is [projected](https://vega.github.io/vega-lite/docs/selection.html#project) over multiple fields or encodings.
-     */
-    field?: FieldName;
-  }
+      /**
+       * If a selection parameter is specified, the field name to extract selected values for
+       * when the selection is [projected](https://vega.github.io/vega-lite/docs/selection.html#project) over multiple fields or encodings.
+       */
+      field?: FieldName;
+    }
   | {
-    /**
-     * The name of a parameter.
-     */
-    param: ParameterName;
+      /**
+       * The name of a parameter.
+       */
+      param: ParameterName;
 
-    /**
-     * If a selection parameter is specified, the encoding channel to extract selected values for
-     * when a selection is [projected](https://vega.github.io/vega-lite/docs/selection.html#project) over multiple fields or encodings.
-     */
-    encoding?: SingleDefUnitChannel;
-  };
+      /**
+       * If a selection parameter is specified, the encoding channel to extract selected values for
+       * when a selection is [projected](https://vega.github.io/vega-lite/docs/selection.html#project) over multiple fields or encodings.
+       */
+      encoding?: SingleDefUnitChannel;
+    };
 
 export type PointSelectionConfigWithoutType = Omit<PointSelectionConfig, 'type'>;
 
@@ -348,7 +348,7 @@ export const defaultConfig: SelectionConfig = {
     resolve: 'global',
     mark: {fill: '#333', fillOpacity: 0.125, stroke: 'gray', strokeWidth: 2, strokeDash: [8, 5]},
     clear: 'dblclick',
-  }
+  },
 };
 
 export function isLegendBinding(bind: any): bind is LegendBinding {

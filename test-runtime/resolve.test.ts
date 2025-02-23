@@ -16,7 +16,7 @@ import {describe, expect, it} from 'vitest';
 const fns = {
   point: pt,
   interval: brush,
-  region: multiviewRegion
+  region: multiviewRegion,
 };
 
 for (const type of selectionTypes) {
@@ -34,7 +34,7 @@ for (const type of selectionTypes) {
           const selection = {
             type,
             resolve: 'global',
-            ...(specType === 'facet' && type !== 'region' ? {encodings: ['y']} : {})
+            ...(specType === 'facet' && type !== 'region' ? {encodings: ['y']} : {}),
           };
 
           for (let i = 0; i < hits[specType].length; i++) {
@@ -59,7 +59,7 @@ for (const type of selectionTypes) {
           const selection = {
             type,
             resolve,
-            ...(specType === 'facet' && type !== 'region' ? {encodings: ['x']} : {})
+            ...(specType === 'facet' && type !== 'region' ? {encodings: ['x']} : {}),
           };
 
           /**

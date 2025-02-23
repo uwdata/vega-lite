@@ -9,7 +9,7 @@ import {SELECTION_ID} from '../../selection.js';
 export const SCREEN_PATH = '_screen_path';
 
 const region: SelectionCompiler<'region'> = {
-  defined: selCmpt => selCmpt.type === 'region',
+  defined: (selCmpt) => selCmpt.type === 'region',
 
   parse: (model, selCmpt, selDef) => {
     // Region selections are only valid over the SELECTION_ID field.
@@ -33,10 +33,10 @@ const region: SelectionCompiler<'region'> = {
         {
           events: [{signal: screenPathName}],
           update: `vlSelectionTuples(intersectLasso(${stringValue(
-            model.getName('marks')
-          )}, ${screenPathName}, unit), {unit: ${unitName(model)}})`
-        }
-      ]
+            model.getName('marks'),
+          )}, ${screenPathName}, unit), {unit: ${unitName(model)}})`,
+        },
+      ],
     });
 
     const regionEvents = selCmpt.events.reduce((on, evt) => {
@@ -48,14 +48,14 @@ const region: SelectionCompiler<'region'> = {
       return [
         ...on,
         {events: evt.between[0], update: `[[x(unit), y(unit)]]`},
-        {events: evt, update: `lassoAppend(${screenPathName}, clamp(x(unit), 0, ${w}), clamp(y(unit), 0, ${h}))`}
+        {events: evt, update: `lassoAppend(${screenPathName}, clamp(x(unit), 0, ${w}), clamp(y(unit), 0, ${h}))`},
       ];
     }, [] as OnEvent[]);
 
     signalsToAdd.push({
       name: screenPathName,
       init: '[]',
-      on: regionEvents
+      on: regionEvents,
     });
 
     return [...signals, ...signalsToAdd];
@@ -85,7 +85,7 @@ const region: SelectionCompiler<'region'> = {
             fillOpacity: {value: fillOpacity},
             stroke: {value: stroke},
             strokeWidth: {value: strokeWidth},
-            strokeDash: {value: strokeDash}
+            strokeDash: {value: strokeDash},
           },
           update: {
             path:
@@ -94,21 +94,21 @@ const region: SelectionCompiler<'region'> = {
               // if it corresponds to a unit different from the one in the store.
               selCmpt.resolve === 'global'
                 ? [
-                  {
-                    test: `${store}.length && ${store}[0].unit === ${unitName(model)}`,
-                    ...path
-                  },
-                  {
-                    value: '[]'
-                  }
-                ]
-                : path
-          }
-        }
+                    {
+                      test: `${store}.length && ${store}[0].unit === ${unitName(model)}`,
+                      ...path,
+                    },
+                    {
+                      value: '[]',
+                    },
+                  ]
+                : path,
+          },
+        },
       },
-      ...marks
+      ...marks,
     ];
-  }
+  },
 };
 
 export default region;

@@ -26,7 +26,7 @@
         target = winSrc.indexOf(type) < 0 ? target : window;
 
         target.dispatchEvent(
-          new PointerEvent('pointermove', {...opts, clientX: opts.clientX - 5, clientY: opts.clientY - 5})
+          new PointerEvent('pointermove', {...opts, clientX: opts.clientX - 5, clientY: opts.clientY - 5}),
         );
 
         target.dispatchEvent(new PointerEvent('pointermove', opts));
@@ -34,7 +34,7 @@
         target.dispatchEvent(type === 'wheel' ? new WheelEvent('wheel', opts) : new PointerEvent(type, opts));
 
         target.dispatchEvent(
-          new PointerEvent('pointermove', {...opts, clientX: opts.clientX + 5, clientY: opts.clientY + 5})
+          new PointerEvent('pointermove', {...opts, clientX: opts.clientX + 5, clientY: opts.clientY + 5}),
         );
       }
 
@@ -105,19 +105,19 @@
             mouseEvt(
               'mousedown',
               brushOrEl(el0, parent, targetBrush),
-              pointOnCircle({clientX: mdX, clientY: mdY}, radius, 0)
+              pointOnCircle({clientX: mdX, clientY: mdY}, radius, 0),
             );
           } else if (i === segments - 1) {
             mouseEvt(
               'mouseup',
               window,
-              pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI)
+              pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI),
             );
           } else {
             pureMouseEvt(
               'mousemove',
               brushOrEl(el0, parent, targetBrush),
-              pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI)
+              pointOnCircle({clientX: mdX, clientY: mdY}, radius, (i / (segments / 2)) * Math.PI),
             );
           }
         }
@@ -150,20 +150,20 @@
           clientY,
           deltaX: delta,
           deltaY: delta,
-          deltaZ: delta
+          deltaZ: delta,
         });
         pointerEvt('wheel', brushOrEl(el, parent, targetBrush), {
           clientX,
           clientY,
           deltaX: Math.sign(delta),
           deltaY: Math.sign(delta),
-          deltaZ: Math.sign(delta)
+          deltaZ: Math.sign(delta),
         });
         return (await view.runAsync()).data('sel_store');
       }
 
       async function getState(signals, data) {
-        (await view.runAsync())
+        await view.runAsync();
         return {
           signals: signals.reduce((o, s) => {
             o[s] = view.signal(s);
@@ -172,7 +172,7 @@
           data: data.reduce((o, d) => {
             o[d] = view.data(d);
             return o;
-          }, {})
+          }, {}),
         };
       }
 
@@ -181,7 +181,7 @@
       }
 
       async function setSignal(name, value) {
-        return (await view.signal(name, value).runAsync());
+        return await view.signal(name, value).runAsync();
       }
     </script>
   </body>
