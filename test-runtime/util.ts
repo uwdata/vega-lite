@@ -1,12 +1,13 @@
 // @ts-expect-error - vega does not yet export resetSVGDefIds
 import {parse, View, resetSVGDefIds} from 'vega';
+import {stringValue} from 'vega-util';
 import {compile} from '../src/index.js';
 import {IntervalSelectionConfigWithoutType, SelectionResolution, SelectionType} from '../src/selection.js';
 import {NormalizedLayerSpec, NormalizedUnitSpec, TopLevelSpec} from '../src/spec/index.js';
 
 export type ComposeType = 'unit' | 'repeat' | 'facet';
-export const selectionTypes: SelectionType[] = ['point', 'interval'];
-export const compositeTypes = ['repeat', 'facet'] as const;
+export const selectionTypes: SelectionType[] = ['point', 'interval', 'region'];
+export const compositeTypes: ComposeType[] = ['repeat', 'facet'];
 export const resolutions: SelectionResolution[] = ['union', 'intersect'];
 
 export const bound = 'bound';
@@ -51,7 +52,7 @@ const UNIT_NAMES = {
 };
 
 export const hits = {
-  discrete: {
+  point: {
     qq: [8, 19],
     qq_clear: [5, 16],
 
@@ -99,8 +100,49 @@ export const hits = {
       [4, 10],
     ],
     facet_clear: [[3], [5], [7]],
+  } as const,
+  region: {
+    circle: [
+      {id: 14, count: 5},
+      {id: 3, count: 2},
+      {id: 6, count: 4},
+    ],
+    circle_clear: [{id: 14}],
+
+    polygon: [
+      {
+        id: 6,
+        coords: [
+          [-30, -30],
+          [-30, 30],
+          [30, 30],
+          [30, -30],
+        ],
+        count: 4,
+      },
+      {
+        id: 14,
+        coords: [
+          [-30, -30],
+          [-30, 30],
+          [-15, 15],
+          [-15, -15],
+          [15, -15],
+          [15, 30],
+          [30, 30],
+          [30, -30],
+        ],
+        count: 2,
+      },
+    ],
+
+    facet: [2, 4, 7],
+    facet_clear: [3, 5, 8],
+
+    repeat: [5, 10, 16],
+    repeat_clear: [13, 14, 2],
   },
-} as const;
+};
 
 const config = {
   // reduce changes in generated SVGs
@@ -253,6 +295,58 @@ export function parentSelector(compositeType: ComposeType, index: number) {
   return compositeType === 'facet' ? `cell > g:nth-child(${index + 1})` : `${UNIT_NAMES.repeat[index]}_group`;
 }
 
+export function region(id: number, parent?: string, targetBrush?: boolean) {
+  return `circleRegion(${stringValue(parent)}, ${!!targetBrush}, ${id})`;
+}
+
+export function circleRegion(
+  idx:
+    | number
+    | {
+        id: number;
+        count?: number;
+      }
+    | {
+        id: number;
+        coords: number[][];
+        count: number;
+      },
+  parent?: string,
+  targetBrush?: boolean,
+  radius = 40,
+  segments = 20,
+) {
+  return `circleRegion(${idx}, ${radius}, ${segments}, ${stringValue(parent)}, ${!!targetBrush})`;
+}
+
+export function polygonRegion(idx: number, polygon: number[][], parent?: string, targetBrush?: boolean) {
+  return `polygonRegion(${idx}, ${JSON.stringify(polygon)}, ${stringValue(parent)}, ${!!targetBrush})`;
+}
+
+export function clearRegion(
+  idx:
+    | number
+    | {
+        id: number;
+        count?: number;
+      }
+    | {
+        id: number;
+        coords: number[][];
+        count: number;
+      },
+  parent?: string,
+  targetBrush?: boolean,
+) {
+  return `clear(${idx}, ${stringValue(parent)}, ${!!targetBrush})`;
+}
+
+export function multiviewRegion(key: keyof typeof hits.region, idx: number, parent?: string, targetBrush?: boolean) {
+  return key.match('_clear')
+    ? clearRegion(hits.region[key][idx], parent, targetBrush)
+    : circleRegion(hits.region[key][idx], parent, targetBrush, 10);
+}
+
 export type BrushKeys = keyof typeof hits.interval;
 export async function brush(view: View, key: BrushKeys, idx: number, parent?: string, targetBrush?: boolean) {
   const h = hits.interval[key][idx];
@@ -263,8 +357,8 @@ export async function brush(view: View, key: BrushKeys, idx: number, parent?: st
   }
 }
 
-export async function pt(view: View, key: keyof typeof hits.discrete, idx: number, parent?: string) {
-  const h = hits.discrete[key][idx] as number;
+export async function pt(view: View, key: keyof typeof hits.point, idx: number, parent?: string) {
+  const h = hits.point[key][idx] as number;
   if (key.match('_clear')) {
     return await clear(view, h, parent);
   } else {
@@ -386,4 +480,15 @@ export async function zoom(view: View, id: number, delta: number, parent: string
     deltaZ: Math.sign(delta),
   });
   return (await view.runAsync()).data('sel_store');
+}
+
+export function getState(signals: string[], data: string[]) {
+  return `getState(${JSON.stringify(signals)}, ${JSON.stringify(data)})`;
+}
+export function getSignal(name: string) {
+  return `getSignal('${name}')`;
+}
+
+export function setSignal(name: string, value: any) {
+  return `setSignal(${stringValue(name)}, ${value})`;
 }

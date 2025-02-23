@@ -839,6 +839,16 @@
         "title": "Scatterplot Pan & Zoom"
       },
       {
+        "name": "selection_type_region",
+        "title": "Region (lasso) selection",
+        "description": "The plot below uses a region selection, which causes the chart to include an interactive brush."
+      },
+      {
+        "name": "selection_type_region_concat",
+        "title": "Customized region (lasso) selection",
+        "description": "The concatenated plot below uses a region selection, which causes the chart to include an interactive brush. The appearance can be customized."
+      },
+      {
         "name": "interactive_query_widgets",
         "title": "Query Widgets"
       },

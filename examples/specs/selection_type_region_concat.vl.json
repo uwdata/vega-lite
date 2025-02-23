@@ -1,0 +1,62 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Two vertically concatenated charts that show a histogram of precipitation in Seattle and the relationship between min and max temperature.",
+  "data": {"url": "data/cars.json", "format": {"type": "json"}},
+  "vconcat": [
+    {
+      "mark": "point",
+      "params": [{
+        "name": "brush",
+        "select": {
+          "type": "region",
+          "mark": {
+            "fill": "#333",
+            "stroke": "#d95f02",
+            "strokeDash": [2, 8],
+            "strokeWidth": 2
+          }
+        }
+      }],
+      "encoding": {
+        "x": {
+          "field": "Horsepower",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "Miles_per_Gallon",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "brush"
+        }
+      ],
+      "mark": "point",
+      "encoding": {
+        "x": {
+          "field": "Acceleration",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              25
+            ]
+          }
+        },
+        "y": {
+          "field": "Displacement",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              500
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

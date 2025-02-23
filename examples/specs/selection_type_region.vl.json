@@ -1,0 +1,19 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {"url": "data/cars.json"},
+  "params": [
+    {
+      "name": "brush",
+      "select": "region"
+    }
+  ],
+  "mark": "point",
+  "encoding": {
+    "x": {"field": "Horsepower", "type": "quantitative"},
+    "y": {"field": "Miles_per_Gallon", "type": "quantitative"},
+    "color": {
+      "condition": {"param": "brush", "field": "Cylinders", "type": "ordinal"},
+      "value": "grey"
+    }
+  }
+}
