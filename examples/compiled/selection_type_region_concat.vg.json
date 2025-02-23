@@ -43,7 +43,7 @@
       "name": "unit",
       "value": {},
       "on": [
-        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+        {"events": "pointermove", "update": "isTuple(group()) ? group() : unit"}
       ]
     },
     {
